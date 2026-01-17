@@ -62,7 +62,7 @@ pointerEvents: "auto",
 fontSize: 15,
 }}
 >
-<div>aidan@lewertoff.com</div>
+<div>design@lewertoff.com</div>
 <div>+41 792 25 22</div>
 </footer>
 </div>
