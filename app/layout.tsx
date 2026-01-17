@@ -62,7 +62,19 @@ pointerEvents: "auto",
 fontSize: 15,
 }}
 >
-<div>design@lewertoff.com</div>
+    <div>
+<a
+    href="mailto:design@lewertoff.com"
+    style={{
+        color: "inherit",
+        textDecoration: "none",
+        cursor:"pointer",
+    }}
+>
+ design@lewertoff.com
+    </a>
+    </div>
+
 <div>+41 792 25 22</div>
 </footer>
 </div>

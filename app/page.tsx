@@ -11,7 +11,7 @@ return (
 <div style={{ display: "flex", flexDirection: "column", gap: 26 }}>
 {projects.map((p) => {
 // ✅ largeur "réelle" du ruban = somme des largeurs d’images
-const ribbonNaturalW = p.images.reduce((sum, img) => sum + (img.w ?? DEFAULT_IMG_W), 0);
+const ribbonNaturalW = p.images.reduce((sum, img) => sum + (img.wHome ?? DEFAULT_IMG_W), 0);
 
 // si tu veux forcer un ruban précis, tu peux mettre p.ribbonWidth dans data
 const ribbonW = p.ribbonWidth ?? ribbonNaturalW;
@@ -34,7 +34,7 @@ alt={img.alt}
 draggable={false}
 style={{
 height: "100%",
-width: img.w ?? DEFAULT_IMG_W, // ✅ chaque image a une largeur contrôlée
+width: img.wHome?? DEFAULT_IMG_W, // ✅ chaque image a une largeur contrôlée
 objectFit: "cover",
 display: "block",
 }}
