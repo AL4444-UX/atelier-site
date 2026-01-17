@@ -2,13 +2,12 @@ import Link from "next/link";
 import { projects } from "../data/projects";
 
 const RIBBON_H = 90;
-const GAP = 20;
 const DEFAULT_IMG_W = 160;
 
 export default function Home() {
 return (
 <main style={{ paddingTop: 40, paddingRight: 24, paddingBottom: 24, paddingLeft: 35 }}>
-<div style={{ display: "flex", flexDirection: "column", gap: 26 }}>
+<div className="homeList" style={{ display: "flex", flexDirection: "column", gap: "var(--homeGap)" }}>
 {projects.map((p) => {
 // ✅ largeur "réelle" du ruban = somme des largeurs d’images
 const ribbonNaturalW = p.images.reduce((sum, img) => sum + (img.wHome ?? DEFAULT_IMG_W), 0);
@@ -22,10 +21,10 @@ key={p.slug}
 href={`/projects/${p.slug}`}
 style={{ color: "inherit", textDecoration: "none", display: "block" }}
 >
-<div style={{ display: "flex", alignItems: "center" }}>
+<div className=""style={{ display: "flex", alignItems: "center" , height: "var(--homeRibbonH)" , overflow:"hidden", }}>
 {/* Ruban */}
-<div style={{ width: ribbonW, height: RIBBON_H, overflow: "hidden" }}>
-<div style={{ display: "flex", height: "100%" }}>
+<div style={{ width: ribbonW, height: "var(--homeRibbonH)", overflow: "hidden" }}>
+<div style={{ display: "flex", height: "var(--homeRibbonH)" }}>
 {p.images.map((img) => (
 <img
 key={img.src}
@@ -43,9 +42,6 @@ display: "block",
 </div>
 </div>
 
-{/* 20px fixes */}
-<div style={{ width: GAP }} />
-
 {/* Titre */}
 <div
 style={{
@@ -55,7 +51,7 @@ alignItems: "center",
 whiteSpace: "nowrap",
 }}
 >
-<div style={{ fontSize: RIBBON_H, lineHeight: 0.85, letterSpacing: -0.5 }}>
+<div style={{ fontSize: "var(--homeTitleSize)", lineHeight: 1, letterSpacing: -0.5 }}>
 {p.title}
 </div>
 </div>

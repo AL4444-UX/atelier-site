@@ -37,3 +37,160 @@ height: 500px !important;
 display: block;
 flex-shrink: 0;
 }
+
+/* MOBILE */
+@media (max-width: 768px) {
+/* Header + footer : moins de padding, plus petit */
+.siteHeader,
+.siteFooter {
+padding: 18px !important;
+}
+
+.siteName {
+font-size: 28px !important;
+}
+
+/* Le contenu doit laisser la place au header/footer */
+.siteContent {
+padding-left: 16px !important;
+padding-right: 16px !important;
+padding-top: 95px !important;
+padding-bottom: 85px !important;
+}
+
+/* Ruban projet : garde 500 si tu veux, mais en mobile c’est souvent trop */
+.projectRibbon {
+height: 320px !important;
+}
+
+.projectRibbonImg {
+height: 320px !important;
+}
+}
+:root{
+--pad: 40px;
+--homeGap: 800px;
+--nameSize: 45px; /* Aidan / Lewertoff */
+--footerSize: 15px;
+
+--homeTitleSize: 90px; /* titres sur la home */
+--projectTitleSize: 28px; /* titre sur page projet */
+
+--homeRibbonH: 90px; /* rubans home */
+--projectRibbonH: 500px; /* ruban page projet */
+--textSize: 14px;
+}
+
+@media (max-width: 640px){
+:root{ --homeGap: 12px;
+--pad: 10px;
+
+
+
+--sectionGap: 10px;
+--blockGap: 8px;
+
+--nameSize: 22px;
+--footerSize: 11px;
+
+--homeTitleSize: 18px; /* important: sinon énorme sur mobile */
+--projectTitleSize: 10px;
+
+--homeRibbonH: 30px; /* ruban plus petit -> images “normales” */
+--projectRibbonH: 200px;
+
+--textSize: 10px;
+}
+}
+
+:root{
+--homeGap: 26px; /* desktop */
+}
+
+@media (max-width: 640px) {
+:root {
+--homeRibbonH: 30px;
+--homeGap: 10px; /* mobile -> mets 6px / 8px / 12px selon ton goût */
+}
+}
+@media (max-width: 640px) {
+  .homeRibbon img {
+    object-fit: contain;
+    }
+}
+
+
+@media (max-width: 640px) {
+.homeRibbon {
+height: auto !important;
+}
+
+.homeRibbon img {
+object-fit: cover !important;
+}
+}
+/* par défaut (desktop) : tu touches à rien */
+.backLink{
+color: #c33;
+text-decoration: none;
+}
+
+/* mobile seulement */
+@media (max-width: 640px){
+.backLink{
+position: absolute;
+left: 500px; /* colle au bord gauche */
+top: 30px; /* ajuste si tu veux plus haut/bas */
+z-index: 9;
+}
+}
+.projectPage{
+padding: 0 20px;
+position: relative;
+}
+
+/* bouton retour desktop (comme tu avais) */
+.projectBack{
+display: inline-block;
+padding-left: 40px;
+margin-top: -18px;
+margin-bottom: 10px;
+color: #000;
+text-decoration: none;
+font-size: 14px;
+}
+
+/* MOBILE : on le place proprement */
+@media (max-width: 640px){
+.projectPage{
+padding: 0; /* si tu veux ruban full largeur */
+}
+
+.projectBack{
+position: absolute;
+left: 16px;
+top: 72px; /* ajuste après */
+padding-left: 0;
+margin: 0;
+z-index: 50;
+}
+}
+
+/* Desktop par défaut : tu ne touches à rien */
+.projectBack {
+position: static;
+}
+
+/* Mobile seulement */
+@media (max-width: 640px) {
+.projectBack {
+position: fixed;
+left: -30px;
+top: -20px;
+transform: translateY(-300%);
+z-index: 20;
+color: #c61818;
+text-decoration: none;
+font-size: 14px;
+}
+}

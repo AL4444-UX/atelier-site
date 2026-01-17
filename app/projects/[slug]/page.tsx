@@ -35,14 +35,14 @@ const ribbonW = project.images.reduce(
 );
 
 return (
-<main style={{ padding: "0 20px" }}>
+<main className="projectPage">
 {/* RETOUR (plus haut, sous "Aidan") */}
-<Link
-href="/"
+<Link 
+href="/" className="projectBack"
 style={{
 display: "inline-block",
 paddingLeft: 65, // aligné avec le header (padding 40)
-top: 80, // remonte sous “Aidan”
+top: 100, // remonte sous “Aidan”
 marginBottom: 0,
 color: "#c61818",
 textDecoration: "none",
@@ -54,36 +54,20 @@ zIndex: 20,
 ← Retour
 </Link>
 
-{/* TITRE - niveau header, centré écran */}
-<div
-style={{
-width: "100%",
-display: "flex",
-justifyContent: "center",
-marginTop: -90,
-marginBottom: 100,
-pointerEvents: "none",
-}}
->
-<h1
-style={{
-fontSize: 28,
-fontWeight: 400,
-letterSpacing: 1,
-margin: 0,
-}}
->
-{project.title}
-</h1>
-</div>
+
 
 {/* RUBAN (500px de haut, scroll horizontal si ça dépasse) */}
 <div
 style={{
 height: RIBBON_H,
-width: "100%",
+width: "100vw",
 overflowX: "auto",
 overflowY: "hidden",
+position: "relative",
+left: "50%",
+transform: "translateX(-50%)",
+paddingLeft: 35,
+paddingRight: 35,
 }}
 >
 <div
