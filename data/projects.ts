@@ -9,6 +9,8 @@ slug: string; // doit matcher l'URL : /projects/SLUG
 title: string; // affiché en gros
 description?: string; // ton texte d'explication
 images: ProjectImage[];
+
+ribbonWidth?: number;
 };
 
 export const projects: Project[] = [
