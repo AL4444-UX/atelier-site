@@ -3,7 +3,7 @@ import { projects } from "../data/projects";
 
 const RIBBON_H = 90;
 const GAP = 20;
-const DEFAULT_IMG_W = 120;
+const DEFAULT_IMG_W = 160;
 
 export default function Home() {
 return (

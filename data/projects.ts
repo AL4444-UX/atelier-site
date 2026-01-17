@@ -16,7 +16,7 @@ ribbonWidth?: number;
 export const projects: Project[] = [
 {
 slug: "ashtable",
-title: "ASHTABLE",
+title: "Ashtable",
 description:
 "Écris ici ton texte d’explication. Tu peux faire plusieurs phrases. (Tu peux aussi mettre des sauts de ligne.)",
 images: [
@@ -27,17 +27,21 @@ images: [
 },
 {
 slug: "module",
-title: "MODULE",
+title: "Module",
 description:
 "Texte du projet MODULE : matériaux, idée, dimensions, contexte, etc.",
 images: [
-{ src: "/projects/module/1.jpg", alt: "module 1", w: 120 },
-{ src: "/projects/module/2.jpg", alt: "module 2", w: 120 },
+{ src: "/projects/module/1.jpg", alt: "module 1", w: 160 },
+{ src: "/projects/module/3.jpg", alt: "module 3", w: 160 },
+{ src: "/projects/module/2.jpg", alt: "module 2", w: 160 },
+{ src: "/projects/module/4.jpg", alt: "module 4", w: 160 },
+{ src: "/projects/module/5.jpg", alt: "module 5", w: 160 },
+{ src: "/projects/module/6.jpg", alt: "module 6", w: 160 },
 ],
 },
 {
 slug: "slab",
-title: "SLAB",
+title: "Slab",
 description:
 "Texte du projet MODULE : matériaux, idée, dimensions, contexte, etc.",
 images: [

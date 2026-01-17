@@ -39,7 +39,8 @@ display: "inline-block",
 marginBottom: 10,
 color: "#828080",
 textDecoration: "none",
-paddingLeft: 18
+paddingLeft: 40,
+paddingBottom: 0,
 }}
 >
 ← Retour
@@ -51,7 +52,7 @@ style={{
 width: "100%",
 display: "flex",
 justifyContent: "center",
-marginTop: -100,
+marginTop: -115,
 marginBottom: 100,
 }}
 >
@@ -90,7 +91,7 @@ src={img.src}
 alt={img.alt}
 className="projectRibbonImg"
 style={{
-width: 1000,
+width: 890,
 objectFit: "contain",
 flexShrink: 0,
 }}
