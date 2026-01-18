@@ -1,0 +1,120 @@
+/* Intègre tes polices (vérifie que le dossier fonts est bien à côté du HTML) */
+@font-face {
+    font-family: "ES Klarheit Grotesk";
+    src: url("fonts/ESKlarheitGrotesk-Book.otf") format("opentype");
+    font-weight: 400;
+}
+
+:root {
+    --pad: 40px;
+    --homeGap: 26px;
+    --homeRibbonH: 90px;
+    --homeTitleSize: 90px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "ES Klarheit Grotesk", sans-serif;
+    background: white;
+}
+
+/* HEADER FIXE (Aidan / Lewertoff) */
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--pad);
+    position: fixed;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 100;
+    background: white;
+}
+
+h1 { margin: 0; font-size: 45px; }
+
+/* LISTE ACCUEIL */
+.home-container {
+    padding: 150px 35px 40px 35px; /* Laisse de la place pour le header */
+    display: flex;
+    flex-direction: column;
+    gap: var(--homeGap);
+}
+
+.project-row {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+}
+
+.ribbon-home {
+    height: var(--homeRibbonH);
+    display: flex;
+    overflow: hidden;
+    margin-right: 20px;
+}
+
+.ribbon-home img {
+    height: 100%;
+    object-fit: cover;
+}
+
+.project-title {
+    font-size: var(--homeTitleSize);
+    line-height: 1;
+}
+
+/* PAGE PROJET */
+.project-content {
+    padding-top: 180px;
+}
+
+.back-link {
+    color: #c61818;
+    text-decoration: none;
+    padding-left: 65px;
+    font-size: 14px;
+}
+
+.ribbon-project {
+    height: 500px;
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+    margin-top: 20px;
+}
+
+.ribbon-project img {
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.description {
+    margin-top: 20px;
+    padding-left: 65px;
+    max-width: 600px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* --- ADAPTATION MOBILE --- */
+@media (max-width: 768px) {
+    :root {
+        --pad: 20px;
+        --homeTitleSize: 40px; /* Plus petit pour ne pas déborder */
+        --homeRibbonH: 60px;
+    }
+
+    header h1 {
+        font-size: 28px; /* "Aidan" et "Lewertoff" plus petits */
+    }
+
+    .ribbon-project {
+        height: 300px; /* Moins haut sur mobile pour voir le texte dessous */
+    }
+
+    .description, .back-link {
+        padding-left: 20px; /* Aligné avec le nouveau padding */
+    }
+}
