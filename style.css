@@ -212,8 +212,8 @@ footer a:hover {
     }
 
     .home-container .ribbon-home {
-        height: 35px !important;
-        margin-right: 10px !important;
+        height: 32px !important;
+        margin-right: 5px !important;
         display: flex !important;
     }
 
