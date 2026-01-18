@@ -3,58 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aidan Lewertoff</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Entrée</title>
+    <style>
+        body, html { 
+            height: 100%; 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            font-family: sans-serif;
+        }
+
+        .lock-container {
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+            padding: 20px;
+        }
+
+        /* TON IMAGE (CADENAS) */
+        .lock-image {
+            width: 120px; /* Ajuste la taille ici */
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        input {
+            border: none;
+            border-bottom: 1px solid black;
+            padding: 10px;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .error { 
+            color: #ff007f; /* Rose pour rester dans le thème */
+            font-size: 12px; 
+            margin-top: 15px; 
+            display: none; 
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <h1>Aidan</h1>
-        <h1>Lewertoff</h1>
-    </header>
-
-    <main class="home-container">
+    <div class="lock-container">
+        <img src="PINKLOCK.jpg" alt="Lock" class="lock-image">
         
-        <a href="ashtable.html" class="project-row">
-            <div class="ribbon-home">
-                <img src="projects/ashtable/1.jpg" style="width:120px">
-                <img src="projects/ashtable/2.jpg" style="width:120px">
-                <img src="projects/ashtable/3.jpg" style="width:120px">
-            </div>
-            <div class="project-title">Ashtable</div>
-        </a>
+        <input type="password" id="pass" placeholder="Mot de passe" onkeypress="checkPass(event)">
+        <div id="error-msg" class="error">Mot de passe incorrect</div>
+    </div>
 
-        <a href="module.html" class="project-row">
-            <div class="ribbon-home">
-                <img src="projects/module/1.jpg" style="width:150px">
-                <img src="projects/module/2.jpg" style="width:90px">
-                <img src="projects/module/3.jpg" style="width:120px">
-                <img src="projects/module/4.jpg" style="width:100px">
-                <img src="projects/module/5.jpg" style="width:130px">
-                <img src="projects/module/6.jpg" style="width:130px">
-                <img src="projects/module/7.jpg" style="width:130px">
-            </div>
-            <div class="project-title">Module</div>
-        </a>
-
-        <a href="slab.html" class="project-row">
-            <div class="ribbon-home">
-                <img src="projects/slab/1.jpg" style="width:170px">
-                <img src="projects/slab/2.jpg" style="width:210px">
-                <img src="projects/slab/3.jpg" style="width:130px">
-                <img src="projects/slab/4.jpg" style="width:130px">
-            </div>
-            <div class="project-title">Slab</div>
-        </a>
-
-    </main>
-
-<footer>
-    <div><a href="mailto:design@lewertoff.com">design@lewertoff.com</a></div>
-   <div><a href="tel:+41797922522">+41 79 792 25 22</a></div>
-</footer>
-
-</script>
-
+    <script>
+        function checkPass(e) {
+            if (e.key === 'Enter') {
+                const pass = document.getElementById('pass').value;
+                // CHANGE TON MOT DE PASSE ICI
+                if (pass === 'fag') {
+                    window.location.href = "home.html";
+                } else {
+                    document.getElementById('error-msg').style.display = 'block';
+                }
+            }
+        }
+    </script>
 </body>
 </html>
