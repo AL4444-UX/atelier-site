@@ -276,7 +276,7 @@ footer a:hover {
         justify-content: space-between !important;
         padding: 20px 18px !important; /* Un peu plus de hauteur pour le confort */
         box-sizing: border-box !important;
-        background: white !important; /* INDISPENSABLE pour masquer les images dessous */
+        background: rgba(255, 255, 255, 0) !important; /* INDISPENSABLE pour masquer les images dessous */
         font-size: 13px !important;
         z-index: 2000 !important; /* Au-dessus des images */
         border-top: 1px solid #eee; /* Optionnel : une ligne très fine pour séparer des images */
