@@ -56,6 +56,14 @@ footer {
     z-index: 100;
 }
 
+footer a {
+    color: inherit; /* Garde la couleur noire */
+    text-decoration: none; /* Enlève le soulignement */
+}
+
+footer a:hover {
+    text-decoration: underline; /* Optionnel : souligne seulement quand on passe la souris dessus */
+}
 
 /* LISTE ACCUEIL */
 .home-container {
@@ -102,12 +110,18 @@ footer {
 }
 
 .back-link {
-    color: #c61818;
+    display: inline-block;
+    color: #000;
     text-decoration: none;
-    padding-left: 65px;
-    font-size: 14px;
-    display: block;
-    margin-bottom: 30px;
+    padding-left: 35px; /* Aligné sur la marge des images */
+    font-size: 13px;
+    margin-bottom: 20px; /* Espace réduit avec le ruban */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: opacity 0.3s;
+    /* On s'assure qu'il n'est pas caché par le header */
+    position: relative; 
+    z-index: 10;
 }
 
 .ribbon-project {
@@ -129,6 +143,57 @@ footer {
     max-width: 600px;
     font-size: 14px;
     line-height: 1.6;
+}
+
+/* Cache la barre de scroll pour tous les navigateurs */
+.ribbon-project {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer/Edge */
+}
+
+.ribbon-project::-webkit-scrollbar {
+    display: none; /* Chrome, Safari et Opera */
+}
+
+/* Définition de l'animation */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100vw); /* Part de l'extérieur gauche */
+        opacity: 1;
+    }
+    to {
+        transform: translateX(0); /* Arrive à sa position initiale */
+        opacity: 1;
+    }
+}
+
+/* Application de l'animation sur les lignes de projet */
+.project-row {
+    animation: slideIn 0.8s ease-out forwards;
+    transform: translateX(-100vw);
+    opacity: 1; /* Évite un flash de l'élément avant le début de l'anim */
+}
+
+/* Optionnel : Décalage pour un effet "en cascade" */
+.project-row:nth-child(1) { animation-delay: 0.4s; }
+.project-row:nth-child(2) { animation-delay: 0.4s; }
+.project-row:nth-child(3) { animation-delay: 0.4s; }
+.project-row:nth-child(4) { animation-delay: 0.4s; }
+
+/* Animation d'apparition douce pour la page projet */
+.project-content {
+    animation: fadeInPage 0.5s ease-out;
+}
+
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+        transform: translateY(10px); /* Petit mouvement vers le haut */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* RESPONSIVE MOBILE */
