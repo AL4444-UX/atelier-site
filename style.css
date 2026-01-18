@@ -1,4 +1,4 @@
-/* Intègre tes polices (vérifie que le dossier fonts est bien à côté du HTML) */
+/* POLICES */
 @font-face {
     font-family: "ES Klarheit Grotesk";
     src: url("fonts/ESKlarheitGrotesk-Book.otf") format("opentype");
@@ -8,34 +8,58 @@
 :root {
     --pad: 40px;
     --homeGap: 26px;
-    --homeRibbonH: 90px;
+    --nameSize: 45px;
     --homeTitleSize: 90px;
+    --homeRibbonH: 90px;
 }
 
 body {
     margin: 0;
     padding: 0;
-    font-family: "ES Klarheit Grotesk", sans-serif;
     background: white;
+    color: black;
+    font-family: "ES Klarheit Grotesk", sans-serif;
+    overflow-x: hidden;
 }
 
-/* HEADER FIXE (Aidan / Lewertoff) */
+/* HEADER : Aidan / Lewertoff */
 header {
     display: flex;
     justify-content: space-between;
     padding: var(--pad);
     position: fixed;
+    top: 0;
     width: 100%;
     box-sizing: border-box;
     z-index: 100;
     background: white;
 }
 
-h1 { margin: 0; font-size: 45px; }
+header h1 {
+    margin: 0;
+    font-size: var(--nameSize);
+    font-weight: 400;
+    letter-spacing: -1px;
+}
+
+/* --- FOOTER --- */
+footer {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--pad);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 15px;
+    background: white;
+    z-index: 100;
+}
+
 
 /* LISTE ACCUEIL */
 .home-container {
-    padding: 150px 35px 40px 35px; /* Laisse de la place pour le header */
+    padding: 180px 35px 40px 35px; /* Espace sous le header */
     display: flex;
     flex-direction: column;
     gap: var(--homeGap);
@@ -45,29 +69,36 @@ h1 { margin: 0; font-size: 45px; }
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: black;
+    color: inherit;
 }
 
+/* --- AJUSTEMENT RUBAN HOME --- */
 .ribbon-home {
     height: var(--homeRibbonH);
     display: flex;
-    overflow: hidden;
+    flex-direction: row; /* Aligne les images en ligne */
+    gap: 0; /* Pas d'espace entre les images du ruban */
+    overflow: hidden; /* Coupe ce qui dépasse du ruban */
     margin-right: 20px;
+    flex-shrink: 0; /* Empêche le ruban de s'écraser */
 }
 
 .ribbon-home img {
     height: 100%;
+    width: auto; /* Garde le ratio de l'image */
+    display: block;
     object-fit: cover;
 }
 
 .project-title {
     font-size: var(--homeTitleSize);
-    line-height: 1;
+    line-height: 0.8;
+    letter-spacing: -2px;
 }
 
 /* PAGE PROJET */
 .project-content {
-    padding-top: 180px;
+    padding-top: 150px;
 }
 
 .back-link {
@@ -75,14 +106,16 @@ h1 { margin: 0; font-size: 45px; }
     text-decoration: none;
     padding-left: 65px;
     font-size: 14px;
+    display: block;
+    margin-bottom: 30px;
 }
 
 .ribbon-project {
     height: 500px;
     display: flex;
     overflow-x: auto;
+    padding-left: 35px;
     gap: 0;
-    margin-top: 20px;
 }
 
 .ribbon-project img {
@@ -91,30 +124,23 @@ h1 { margin: 0; font-size: 45px; }
 }
 
 .description {
-    margin-top: 20px;
+    margin-top: 30px;
     padding-left: 65px;
     max-width: 600px;
     font-size: 14px;
     line-height: 1.6;
 }
 
-/* --- ADAPTATION MOBILE --- */
-@media (max-width: 768px) {
+/* RESPONSIVE MOBILE */
+@media (max-width: 640px) {
     :root {
-        --pad: 20px;
-        --homeTitleSize: 40px; /* Plus petit pour ne pas déborder */
-        --homeRibbonH: 60px;
+        --pad: 18px;
+        --nameSize: 22px;
+        --homeTitleSize: 30px;
+        --homeRibbonH: 40px;
+        --homeGap: 12px;
     }
-
-    header h1 {
-        font-size: 28px; /* "Aidan" et "Lewertoff" plus petits */
-    }
-
-    .ribbon-project {
-        height: 300px; /* Moins haut sur mobile pour voir le texte dessous */
-    }
-
-    .description, .back-link {
-        padding-left: 20px; /* Aligné avec le nouveau padding */
-    }
+    
+    .home-container { padding-top: 100px; }
+    .ribbon-project { height: 300px; }
 }
