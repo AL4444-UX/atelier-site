@@ -16,7 +16,6 @@
 body {
     margin: 0;
     padding: 0;
-    background: white;
     color: black;
     font-family: "ES Klarheit Grotesk", sans-serif;
     overflow-x: hidden;
@@ -32,7 +31,6 @@ header {
     width: 100%;
     box-sizing: border-box;
     z-index: 100;
-    background: white;
 }
 
 header h1 {
@@ -52,7 +50,6 @@ footer {
     width: 100%;
     box-sizing: border-box;
     font-size: 15px;
-    background: white;
     z-index: 100;
 }
 
@@ -180,32 +177,122 @@ footer a:hover {
 .project-row:nth-child(3) { animation-delay: 0.4s; }
 .project-row:nth-child(4) { animation-delay: 0.4s; }
 
-/* Animation d'apparition douce pour la page projet */
-.project-content {
-    animation: fadeInPage 0.5s ease-out;
-}
-
-@keyframes fadeInPage {
-    from {
-        opacity: 0;
-        transform: translateY(10px); /* Petit mouvement vers le haut */
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* RESPONSIVE MOBILE */
+/* --- RESPONSIVE MOBILE FINAL RÉPARÉ --- */
 @media (max-width: 640px) {
-    :root {
-        --pad: 18px;
-        --nameSize: 22px;
-        --homeTitleSize: 30px;
-        --homeRibbonH: 40px;
-        --homeGap: 12px;
-    }
     
-    .home-container { padding-top: 100px; }
-    .ribbon-project { height: 300px; }
+    /* 1. RÉGLAGES COMMUNS */
+    header {
+        height: auto !important;
+        padding: 30px 18px 10px 18px !important;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: white;
+        z-index: 1000; /* Augmenté pour rester devant tout */
+    }
+
+    header h1 {
+        font-size: 25px !important;
+        margin: 0 !important;
+    }
+
+    /* 2. PAGE ACCUEIL (HOME) */
+    .home-container {
+        padding-top: 110px !important;
+        padding-left: 18px !important;
+        padding-right: 18px !important;
+        padding-bottom: 80px !important; 
+    }
+
+    .home-container .project-row {
+        display: flex !important;
+        align-items: center !important;
+        margin-bottom: -10px !important;
+    }
+
+    .home-container .ribbon-home {
+        height: 25px !important;
+        margin-right: 10px !important;
+        display: flex !important;
+    }
+
+    .home-container .ribbon-home img {
+        height: 100% !important;
+        width: auto !important; 
+    }
+
+    .home-container .project-title {
+        font-size: 18px !important;
+        white-space: nowrap !important;
+        letter-spacing: -0.5px !important;
+    }
+
+    /* 3. PAGE PROJET */
+    .project-content {
+        padding-top: 100px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        padding-bottom: 100px !important; /* Augmenté pour laisser la place au footer */
+        display: block !important;
+    }
+
+    .project-content .ribbon-project {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    .project-content .ribbon-project img {
+        display: block !important;
+        width: 100% !important;      
+        height: auto !important;     
+        margin-bottom: 5px !important; 
+        max-width: none !important;
+    }
+
+    .project-content .back-link {
+        display: block !important;
+        padding-left: 18px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .project-content .description {
+        padding-left: 18px !important;
+        padding-right: 18px !important;
+        margin-top: 20px !important;
+        max-width: 100% !important;
+    }
+
+    /* 4. LE FOOTER (C'est ici qu'on force l'apparition) */
+    footer {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        padding: 20px 18px !important; /* Un peu plus de hauteur pour le confort */
+        box-sizing: border-box !important;
+        background: white !important; /* INDISPENSABLE pour masquer les images dessous */
+        font-size: 13px !important;
+        z-index: 2000 !important; /* Au-dessus des images */
+        border-top: 1px solid #eee; /* Optionnel : une ligne très fine pour séparer des images */
+    }
+
+    /* 5. SUPPRESSION DE LA JAUGE DE SCROLL */
+    /* On cible le HTML et le BODY pour cacher la barre système du navigateur */
+    html::-webkit-scrollbar, 
+    body::-webkit-scrollbar,
+    .project-content::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+    }
+
+    html, body {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
 }
