@@ -54,17 +54,17 @@ footer {
 }
 
 footer a {
-    color: inherit; /* Garde la couleur noire */
-    text-decoration: none; /* Enlève le soulignement */
+    color: inherit;
+    text-decoration: none;
 }
 
 footer a:hover {
-    text-decoration: underline; /* Optionnel : souligne seulement quand on passe la souris dessus */
+    text-decoration: underline;
 }
 
 /* LISTE ACCUEIL */
 .home-container {
-    padding: 180px 35px 40px 35px; /* Espace sous le header */
+    padding: 180px 35px 40px 35px;
     display: flex;
     flex-direction: column;
     gap: var(--homeGap);
@@ -81,18 +81,18 @@ footer a:hover {
 .ribbon-home {
     height: var(--homeRibbonH);
     display: flex;
-    flex-direction: row; /* Aligne les images en ligne */
-    gap: 0; /* Pas d'espace entre les images du ruban */
-    overflow: hidden; /* Coupe ce qui dépasse du ruban */
+    flex-direction: row;
+    gap: 0; /* Gap conservé à 0 */
+    overflow: hidden;
     margin-right: 20px;
-    flex-shrink: 0; /* Empêche le ruban de s'écraser */
+    flex-shrink: 0;
 }
 
 .ribbon-home img {
     height: 100%;
-    width: auto; /* Garde le ratio de l'image */
+    width: auto; /* Changé de fixe à auto pour le ratio */
     display: block;
-    object-fit: cover;
+    object-fit: contain; /* Changé cover en contain pour ne pas rogner tes photos */
 }
 
 .project-title {
@@ -110,13 +110,12 @@ footer a:hover {
     display: inline-block;
     color: #000;
     text-decoration: none;
-    padding-left: 35px; /* Aligné sur la marge des images */
+    padding-left: 35px;
     font-size: 13px;
-    margin-bottom: 20px; /* Espace réduit avec le ruban */
+    margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: opacity 0.3s;
-    /* On s'assure qu'il n'est pas caché par le header */
     position: relative; 
     z-index: 10;
 }
@@ -126,12 +125,14 @@ footer a:hover {
     display: flex;
     overflow-x: auto;
     padding-left: 35px;
-    gap: 0;
+    gap: 0; /* Gap conservé à 0 */
 }
 
 .ribbon-project img {
-    height: 100%;
-    flex-shrink: 0;
+    height: 100%;       
+    width: auto;        /* Adaptatif selon la résolution */
+    flex-shrink: 0;     
+    display: block;
 }
 
 .description {
@@ -142,45 +143,41 @@ footer a:hover {
     line-height: 1.6;
 }
 
-/* Cache la barre de scroll pour tous les navigateurs */
+/* Cache la barre de scroll */
 .ribbon-project {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer/Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .ribbon-project::-webkit-scrollbar {
-    display: none; /* Chrome, Safari et Opera */
+    display: none;
 }
 
-/* Définition de l'animation */
+/* Animations */
 @keyframes slideIn {
     from {
-        transform: translateX(-100vw); /* Part de l'extérieur gauche */
+        transform: translateX(-100vw);
         opacity: 1;
     }
     to {
-        transform: translateX(0); /* Arrive à sa position initiale */
+        transform: translateX(0);
         opacity: 1;
     }
 }
 
-/* Application de l'animation sur les lignes de projet */
 .project-row {
     animation: slideIn 0.8s ease-out forwards;
     transform: translateX(-100vw);
-    opacity: 1; /* Évite un flash de l'élément avant le début de l'anim */
+    opacity: 1;
 }
 
-/* Optionnel : Décalage pour un effet "en cascade" */
 .project-row:nth-child(1) { animation-delay: 0.4s; }
 .project-row:nth-child(2) { animation-delay: 0.4s; }
 .project-row:nth-child(3) { animation-delay: 0.4s; }
 .project-row:nth-child(4) { animation-delay: 0.4s; }
 
-/* --- RESPONSIVE MOBILE FINAL RÉPARÉ --- */
+/* --- RESPONSIVE MOBILE --- */
 @media (max-width: 640px) {
-    
-    /* 1. RÉGLAGES COMMUNS */
     header {
         height: auto !important;
         padding: 10px 18px 10px 18px !important;
@@ -189,7 +186,7 @@ footer a:hover {
         left: 0;
         width: 100%;
         background: white;
-        z-index: 1000; /* Augmenté pour rester devant tout */
+        z-index: 1000;
     }
 
     header h1 {
@@ -197,7 +194,6 @@ footer a:hover {
         margin: 0 !important;
     }
 
-    /* 2. PAGE ACCUEIL (HOME) */
     .home-container {
         padding-top: 110px !important;
         padding-left: 18px !important;
@@ -228,12 +224,11 @@ footer a:hover {
         letter-spacing: -0.5px !important;
     }
 
-    /* 3. PAGE PROJET */
     .project-content {
         padding-top: 100px !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
-        padding-bottom: 100px !important; /* Augmenté pour laisser la place au footer */
+        padding-bottom: 100px !important;
         display: block !important;
     }
 
@@ -254,45 +249,23 @@ footer a:hover {
     }
 
     .project-content .back-link {
-        display: block !important;
         padding-left: 18px !important;
-        margin-bottom: 20px !important;
     }
 
     .project-content .description {
         padding-left: 18px !important;
         padding-right: 18px !important;
-        margin-top: 20px !important;
-        max-width: 100% !important;
     }
 
-    /* 4. LE FOOTER (C'est ici qu'on force l'apparition) */
     footer {
         position: fixed !important;
         bottom: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        padding: 10px 18px !important; /* Un peu plus de hauteur pour le confort */
-        box-sizing: border-box !important;
-        background: rgba(255, 255, 255, 0) !important; /* INDISPENSABLE pour masquer les images dessous */
-        font-size: 13px !important;
-        z-index: 2000 !important; /* Au-dessus des images */
-        border-top: 1px solid #eeeeee00; /* Optionnel : une ligne très fine pour séparer des images */
+        background: rgba(255, 255, 255, 0.9) !important; /* Léger fond pour la lisibilité */
+        z-index: 2000 !important;
     }
 
-    /* 5. SUPPRESSION DE LA JAUGE DE SCROLL */
-    /* On cible le HTML et le BODY pour cacher la barre système du navigateur */
     html::-webkit-scrollbar, 
-    body::-webkit-scrollbar,
-    .project-content::-webkit-scrollbar {
+    body::-webkit-scrollbar {
         display: none !important;
-        width: 0 !important;
-    }
-
-    html, body {
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
     }
 }
