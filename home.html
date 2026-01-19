@@ -113,19 +113,19 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.project-placeholder').forEach(el => el.remove());
 });
 
-// --- VARIABLES GLOBALES ---
-let touchStartY = 0;
-let isPulling = false;
-let activeProject = null;
+// --- VARIABLES ---
+let startY = 0;
+let isDragging = false;
+let activeProjectEl = null;
 
-// --- FONCTION D'OUVERTURE / FERMETURE ---
+// --- FONCTION TOGGLE ---
 function toggleProject(projectId, event) {
     if (event) event.preventDefault();
     
     const body = document.body;
     const isMobile = window.innerWidth <= 900; 
     
-    // Déterminer la cible
+    // Identifier la cible
     let target = projectId ? document.getElementById(projectId) : document.querySelector('.project-container.active');
     if (!target) return;
     
@@ -133,28 +133,28 @@ function toggleProject(projectId, event) {
 
     // === OUVERTURE ===
     if (!body.classList.contains('is-project')) {
-        activeProject = target; // On stocke la référence
+        
+        activeProjectEl = target; // On garde en mémoire qui est ouvert
 
-        // 1. Sauvegarde position scroll page principale
+        // Sauvegarde positions
         body.dataset.scrollY = window.pageYOffset;
         const rect = target.getBoundingClientRect();
         const ribbonRect = ribbon.getBoundingClientRect();
         
-        // Sauvegarde dimensions pour fermeture desktop
-        body.dataset.initTop = rect.top; 
-        body.dataset.initLeft = rect.left; 
-        body.dataset.initW = ribbonRect.width;
-        body.dataset.initH = ribbonRect.height;
+        body.dataset.initialTop = rect.top; 
+        body.dataset.initialLeft = rect.left; 
+        body.dataset.initialWidth = ribbonRect.width;
+        body.dataset.initialHeight = ribbonRect.height;
 
-        // 2. Placeholder (Fantôme)
+        // Placeholder
         const placeholder = document.createElement('div');
         placeholder.className = 'project-placeholder';
-        placeholder.id = 'ph-' + target.id;
+        placeholder.id = 'placeholder-' + target.id;
         placeholder.style.height = rect.height + "px";
         placeholder.style.width = "100%";
         target.parentNode.insertBefore(placeholder, target);
 
-        // 3. Positionnement Fixe
+        // Fixer le projet
         target.style.transition = "none";
         target.style.position = "fixed";
         target.style.top = rect.top + "px";
@@ -164,18 +164,16 @@ function toggleProject(projectId, event) {
         
         target.classList.add('active');
         body.classList.add('is-project');
-        
-        // Reset scroll interne
-        target.scrollTop = 0;
-        window.scrollTo(0, 0); 
 
-        // 4. Animation d'entrée
+        // Scroll 0
+        window.scrollTo(0, 0); 
+        target.scrollTop = 0;
+
+        // Animation entrée
         requestAnimationFrame(() => {
             setTimeout(() => {
                 const curve = "all 0.8s cubic-bezier(0.23, 1, 0.32, 1)";
-                
                 if (!isMobile) {
-                    // Desktop
                     target.style.transition = curve;
                     ribbon.style.transition = curve;
                     target.style.top = "10px"; 
@@ -184,10 +182,11 @@ function toggleProject(projectId, event) {
                     ribbon.style.width = "100vw";     
                     ribbon.style.height = "500px";    
                 } else {
-                    // Mobile : on gère via CSS animation classiquement, 
-                    // mais on s'assure que le container prend tout l'écran
-                    target.style.height = "100%";
+                    // Mobile : Plein écran simple
+                    target.style.transition = "transform 0.4s ease-out"; // Préparer pour le drag
                     target.style.top = "0";
+                    target.style.left = "0";
+                    target.style.height = "100%"; 
                     target.style.overflowY = "scroll";
                 }
             }, 20);
@@ -196,27 +195,29 @@ function toggleProject(projectId, event) {
     } else {
         // === FERMETURE ===
         
-        // Mobile Close
+        // Mobile fermeture
         if (isMobile) {
             const originalY = parseFloat(body.dataset.scrollY || 0);
             window.scrollTo(0, originalY);
 
             target.classList.add('closing'); 
             
-            // Animation de sortie vers le bas
-            target.style.transition = "transform 0.4s ease-out";
+            // Animation sortie vers le bas
+            target.style.transition = "transform 0.4s ease-in";
             target.style.transform = "translateY(100%)";
 
-            setTimeout(() => { cleanUp(target, body); }, 400); 
+            activeProjectEl = null;
+
+            setTimeout(() => { cleanUpProject(target, body); }, 400); 
             return; 
         }
 
-        // Desktop Close
+        // Desktop fermeture (inchangé)
         const originalY = parseFloat(body.dataset.scrollY);
-        const iTop = parseFloat(body.dataset.initTop);
-        const iLeft = parseFloat(body.dataset.initLeft);
-        const iH = parseFloat(body.dataset.initH);
-        const iW = parseFloat(body.dataset.initW);
+        const iTop = parseFloat(body.dataset.initialTop);
+        const iLeft = parseFloat(body.dataset.initialLeft);
+        const iW = parseFloat(body.dataset.initialWidth);
+        const iH = parseFloat(body.dataset.initialHeight);
         
         target.style.transition = "none";
         if(ribbon) ribbon.style.transition = "none";
@@ -243,7 +244,6 @@ function toggleProject(projectId, event) {
                     ribbon.style.paddingLeft = "0px";
                 }
                 
-                // Reset styles internes
                 const details = target.querySelector('.project-details');
                 if(details) details.style.paddingTop = "0px";
                 const row = target.querySelector('.project-row');
@@ -255,111 +255,128 @@ function toggleProject(projectId, event) {
             }, 50);
         });
 
-        setTimeout(() => { cleanUp(target, body); }, 850);
+        setTimeout(() => { cleanUpProject(target, body); }, 850);
     }
 }
 
 // --- LOGIQUE TACTILE (PULL TO CLOSE) ---
 
-// On écoute sur la fenêtre entière pour ne rien rater
+// 1. TOUCH START
 window.addEventListener('touchstart', (e) => {
-    // Si aucun projet n'est ouvert ou si on n'est pas sur mobile, on arrête
-    if (!activeProject || window.innerWidth > 900) return;
+    // Si pas de projet actif ou Desktop, on s'en fiche
+    if (!activeProjectEl || window.innerWidth > 900) return;
 
-    // On ne s'active que si on est tout en haut du contenu
-    // On utilise une tolérance de 2px
-    if (activeProject.scrollTop <= 2) {
-        touchStartY = e.touches[0].clientY;
-        isPulling = true;
-    } else {
-        isPulling = false;
+    // SCÉNARIO A : On touche le HEADER (Aidan, Flèche, etc.)
+    // On autorise le drag IMMÉDIATEMENT
+    if (e.target.closest('header')) {
+        startY = e.touches[0].clientY;
+        isDragging = true;
+        return; // On sort, c'est validé
     }
-}, { passive: true });
 
+    // SCÉNARIO B : On touche le CONTENU du projet
+    // On n'autorise que si on est tout en haut du scroll
+    if (activeProjectEl.scrollTop <= 5) { // Tolérance 5px
+        startY = e.touches[0].clientY;
+        isDragging = true;
+    } else {
+        isDragging = false;
+    }
+}, { passive: false }); // Important
+
+// 2. TOUCH MOVE
 window.addEventListener('touchmove', (e) => {
-    // Si on n'a pas commencé le geste valide, on sort
-    if (!isPulling || !activeProject) return;
+    if (!isDragging || !activeProjectEl) return;
 
     const currentY = e.touches[0].clientY;
-    const diff = currentY - touchStartY;
+    const diff = currentY - startY;
 
-    // Si on tire vers le bas (diff > 0) ET qu'on est toujours en haut
-    if (diff > 0 && activeProject.scrollTop <= 2) {
+    // Si on tire vers le bas (diff > 0)
+    if (diff > 0) {
         
-        // C'EST ICI QUE CA BLOQUE LE SCROLL NATIF
-        if(e.cancelable) e.preventDefault();
+        // On vérifie une dernière fois qu'on est en haut pour ne pas casser le scroll
+        // (Sauf si on drag depuis le header, là on a toujours le droit)
+        const isHeaderDrag = e.target.closest('header');
         
-        // On applique le mouvement avec résistance (0.5)
-        activeProject.style.transform = `translateY(${diff * 0.5}px)`;
-    
-    } else if (diff < 0) {
-        // Si on remonte (scroll vers le bas pour lire), on libère le script
-        isPulling = false;
-        activeProject.style.transform = "";
+        if (isHeaderDrag || activeProjectEl.scrollTop <= 5) {
+            // STOP : On interdit au navigateur de faire son refresh/rebond
+            if (e.cancelable) e.preventDefault();
+            
+            // On déplace le projet
+            // diff * 0.5 = résistance (ça bouge 2x moins vite que le doigt)
+            activeProjectEl.style.transform = `translateY(${diff * 0.6}px)`;
+        }
     }
-}, { passive: false }); // <--- TRES IMPORTANT : passive: false permet le preventDefault
+}, { passive: false }); // INDISPENSABLE pour que preventDefault fonctionne
 
+// 3. TOUCH END
 window.addEventListener('touchend', (e) => {
-    if (!isPulling || !activeProject) return;
-    isPulling = false;
+    if (!isDragging || !activeProjectEl) return;
+    isDragging = false;
 
-    // Analyse de la distance parcourue
-    const style = window.getComputedStyle(activeProject);
+    // Calcul de combien on a descendu
+    const style = window.getComputedStyle(activeProjectEl);
     const matrix = new WebKitCSSMatrix(style.transform);
-    const translateY = matrix.m42; // Récupère la valeur Y
+    const translateY = matrix.m42;
 
-    // Seuil de déclenchement : 80px
-    if (translateY > 80) {
-        toggleProject(); // Ferme le projet
+    // Si on a tiré plus de 100px, on ferme
+    if (translateY > 100) {
+        toggleProject(); 
     } else {
-        // Sinon rebond
-        activeProject.style.transition = "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
-        activeProject.style.transform = "translateY(0px)";
+        // Sinon, ça remonte (rebond)
+        activeProjectEl.style.transition = "transform 0.3s ease-out";
+        activeProjectEl.style.transform = "";
         
-        // Nettoyage après rebond
         setTimeout(() => {
-            if (activeProject) {
-                activeProject.style.transition = "";
-                activeProject.style.transform = "";
-            }
+            if(activeProjectEl) activeProjectEl.style.transition = "";
         }, 300);
     }
 });
 
-// --- NETTOYAGE GÉNÉRAL ---
-function cleanUp(target, body) {
-    activeProject = null;
-    isPulling = false;
-    
+
+// --- CLEANUP ---
+function cleanUpProject(targetProject, body) {
     body.classList.remove('is-project');
-    target.classList.remove('active', 'closing');
-    target.removeAttribute('style');
+    targetProject.classList.remove('active');
+    targetProject.classList.remove('closing');
     
-    const ribbon = target.querySelector('.ribbon-home');
+    targetProject.removeAttribute('style');
+    const ribbon = targetProject.querySelector('.ribbon-home');
     if(ribbon) ribbon.removeAttribute('style');
     
-    const elementsToClean = target.querySelectorAll('.project-details, .project-row, .project-title, .description');
-    elementsToClean.forEach(el => el.removeAttribute('style'));
+    // Nettoyage interne
+    const details = targetProject.querySelector('.project-details');
+    if(details) details.removeAttribute('style');
+    const row = targetProject.querySelector('.project-row');
+    if(row) row.removeAttribute('style');
+    const title = targetProject.querySelector('.project-title');
+    if(title) title.removeAttribute('style');
+    const desc = targetProject.querySelector('.description');
+    if(desc) desc.removeAttribute('style');
 
-    const ph = document.getElementById('ph-' + target.id);
-    if(ph) ph.remove();
+    const placeholder = document.getElementById('placeholder-' + targetProject.id);
+    if(placeholder) placeholder.remove();
 
     document.querySelectorAll('.project-container').forEach(p => { 
         p.style = ""; 
         p.style.opacity = "1";
         p.style.pointerEvents = "auto";
     });
+    
+    activeProjectEl = null;
 }
 
 // Scroll Desktop
 window.addEventListener("wheel", (evt) => {
     if (window.innerWidth <= 900) return; 
     if (document.body.classList.contains('is-project')) {
-        const ar = document.querySelector('.project-container.active .ribbon-home');
-        if (ar) { evt.preventDefault(); ar.scrollLeft += evt.deltaY; }
+        const activeRibbon = document.querySelector('.project-container.active .ribbon-home');
+        if (activeRibbon) {
+            evt.preventDefault();
+            activeRibbon.scrollLeft += evt.deltaY;
+        }
     }
 }, { passive: false });
 </script>
-
 </body>
 </html>

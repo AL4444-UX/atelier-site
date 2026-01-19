@@ -323,4 +323,21 @@ body.is-project .project-container.active {
     overscroll-behavior-y: none;
     will-change: transform;      /* Optimise pour la fluidité */
 }
+/* AJOUTER À LA FIN DE STYLE.CSS */
+
+/* 1. On dit au Header : "Ne gère pas le tactile toi-même" */
+header {
+    touch-action: none; /* Indispensable pour que le drag fonctionne sur le header */
+}
+
+/* 2. On dit au Projet : "Laisse le JS gérer le vertical" */
+body.is-project .project-container.active {
+    overscroll-behavior: none; /* Bloque le rebond élastique (iPhone) */
+    touch-action: pan-y;       /* Autorise le scroll, mais laisse la main au script */
+}
+
+/* 3. On s'assure que la flèche est bien cliquable/touchable */
+.header-arrow {
+    pointer-events: auto !important;
+}
 }
