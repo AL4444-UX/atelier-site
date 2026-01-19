@@ -80,9 +80,10 @@
             <div class="project-details">
                 <div class="project-row" onclick="toggleProject('Coffeelet')">
                     <div class="ribbon-home">
+                        <img src="projects/Coffeelet/3.jpg">
                         <img src="projects/Coffeelet/1.jpg">
                         <img src="projects/Coffeelet/2.jpg">
-                        <img src="projects/Coffeelet/3.jpg">
+                        
                     </div>
                     <div class="project-title">Coffeelet</div>
                 </div>
@@ -112,14 +113,14 @@
     
     </main>
 
-    <footer>
-        <div><a href="mailto:design@lewertoff.com">design@lewertoff.com</a></div>
-        <div><a href="tel:+41797922522">+41 79 792 25 22</a></div>
-    </footer>
-
+    <footera>
+        <div><a href="mailto:design@lewertoff.com">contact</a></div>
+    </footera>
+    <footerb>
+        <div><a href="© 2026 Aidan Lewertoff. All rights reserved.">© 2026 Aidan Lewertoff. All rights reserved.</a></div>
+    </footerb>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    // Nettoyage au chargement
     document.body.classList.remove('is-project');
     document.querySelectorAll('.project-container').forEach(p => { 
         p.classList.remove('active', 'closing'); 
@@ -132,29 +133,20 @@ let startY = 0;
 let isDragging = false;
 let activeProjectEl = null;
 
-// --- FONCTION PRINCIPALE ---
+// Stocke la taille du ruban pour le retour précis
+let savedRibbonSize = { w: 0, h: 0 };
+
 function toggleProject(projectId, event) {
     if (event) event.preventDefault();
     
     const body = document.body;
     const isMobile = window.innerWidth <= 900; 
     
-    // Si on clique sur le header pour fermer (cas mobile flèche)
-    if (!projectId && isMobile && activeProjectEl) {
-        closeMobileProject();
-        return;
-    }
-
-    // Identification de la cible
+    if (isMobile && activeProjectEl && !projectId) { closeMobileProject(); return; }
     let target = projectId ? document.getElementById(projectId) : document.querySelector('.project-container.active');
-    
-    // Si on est déjà ouvert sur mobile et qu'on appelle la fonction sans ID, c'est pour fermer
-    if (!target && isMobile && activeProjectEl) {
-        closeMobileProject();
-        return;
-    }
-    
+    if (!target && isMobile && activeProjectEl) { closeMobileProject(); return; }
     if (!target) return;
+    
     const ribbon = target.querySelector('.ribbon-home');
 
     // === OUVERTURE ===
@@ -162,21 +154,18 @@ function toggleProject(projectId, event) {
         activeProjectEl = target;
         body.dataset.scrollY = window.pageYOffset;
 
-        // --- MOBILE ---
+        // MOBILE
         if (isMobile) {
             target.classList.add('active');
             body.classList.add('is-project');
             target.scrollTop = 0;
-            // L'animation se fait via CSS (transform)
         } 
         
-        // --- DESKTOP ---
+        // DESKTOP
         else {
-            // Sauvegarde positions
             const rect = target.getBoundingClientRect();
             const ribbonRect = ribbon.getBoundingClientRect();
-            body.dataset.iTop = rect.top; body.dataset.iLeft = rect.left; 
-            body.dataset.iW = ribbonRect.width; body.dataset.iH = ribbonRect.height;
+            savedRibbonSize = { w: ribbonRect.width, h: ribbonRect.height };
 
             // Placeholder
             const ph = document.createElement('div');
@@ -186,26 +175,36 @@ function toggleProject(projectId, event) {
             ph.style.width = "100%";
             target.parentNode.insertBefore(ph, target);
 
-            // Fixer
+            // Fixe
             target.style.transition = "none";
             target.style.position = "fixed";
             target.style.top = rect.top + "px";
             target.style.left = rect.left + "px";
-            target.style.height = ribbonRect.height + "px";
-            target.style.zIndex = "2000"; 
+            target.style.width = rect.width + "px";
+            target.style.height = savedRibbonSize.h + "px"; 
+            target.style.zIndex = "2000";
+
+            ribbon.style.transition = "none";
+            ribbon.style.width = savedRibbonSize.w + "px";
+            ribbon.style.height = savedRibbonSize.h + "px";
             
+            void target.offsetWidth; 
+
+            // Animation
             target.classList.add('active');
             body.classList.add('is-project');
 
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    const curve = "all 0.8s cubic-bezier(0.23, 1, 0.32, 1)";
-                    target.style.transition = curve;
-                    ribbon.style.transition = curve;
-                    target.style.top = "10px"; target.style.left = "0px"; 
-                    target.style.height = "100vh"; ribbon.style.width = "100vw"; ribbon.style.height = "500px";    
-                }, 20);
-            });
+            const curve = "all 0.8s cubic-bezier(0.23, 1, 0.32, 1)";
+            target.style.transition = curve;
+            ribbon.style.transition = curve;
+
+            target.style.top = "0px";
+            target.style.left = "0px";
+            target.style.width = "100%";
+            target.style.height = "100vh";
+            
+            ribbon.style.width = "100vw";
+            ribbon.style.height = "500px"; 
         }
 
     } else {
@@ -216,67 +215,56 @@ function toggleProject(projectId, event) {
             return;
         }
 
-        // Desktop Close
-        const originalY = parseFloat(body.dataset.scrollY);
-        const iTop = parseFloat(body.dataset.iTop);
-        const iLeft = parseFloat(body.dataset.iLeft);
-        const iW = parseFloat(body.dataset.iW);
-        const iH = parseFloat(body.dataset.iH);
-        
-        target.style.transition = "none";
-        if(ribbon) ribbon.style.transition = "none";
-        
-        document.querySelectorAll('.project-container:not(.active)').forEach(p => { 
-            p.style.opacity = '1'; p.style.pointerEvents = 'none'; 
-        });
+        // DESKTOP RETOUR
+        window.scrollTo(0, parseFloat(body.dataset.scrollY));
 
-        window.scrollTo(0, originalY);
+        const ph = document.getElementById('ph-' + target.id);
+        const dest = ph.getBoundingClientRect(); 
 
+        const curve = "all 0.8s cubic-bezier(0.23, 1, 0.32, 1)";
+        target.style.transition = curve;
+        if(ribbon) ribbon.style.transition = curve;
+        
         requestAnimationFrame(() => {
-            setTimeout(() => {
-                const curve = "all 0.8s cubic-bezier(0.23, 1, 0.32, 1)";
-                target.style.transition = curve;
-                if(ribbon) ribbon.style.transition = curve;
-                
-                target.style.top = iTop + "px"; target.style.left = iLeft + "px"; 
-                target.style.height = iH + "px"; 
-                if(ribbon) { ribbon.style.width = iW + "px"; ribbon.style.height = iH + "px"; ribbon.style.paddingLeft = "0px"; }
-                
-                // Nettoyage Desktop
-                setTimeout(() => { cleanUp(target, body); }, 850);
-            }, 50);
+            target.classList.remove('active');
+            
+            target.style.top = dest.top + "px";
+            target.style.left = dest.left + "px";
+            target.style.width = dest.width + "px";
+            target.style.height = savedRibbonSize.h + "px"; 
+
+            if(ribbon) {
+                ribbon.style.width = savedRibbonSize.w + "px";
+                ribbon.style.height = savedRibbonSize.h + "px";
+                ribbon.style.paddingLeft = "0px";
+            }
+            
+            setTimeout(() => { cleanUp(target, body); }, 800);
         });
     }
 }
 
-// Fonction dédiée fermeture Mobile pour animation propre
+// MOBILE CLOSE
 function closeMobileProject() {
     if (!activeProjectEl) return;
-    
     const target = activeProjectEl;
     const body = document.body;
-    
-    // 1. On retire la classe active -> Le CSS reprend le relais et fait descendre la fenetre
+    target.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
     target.classList.remove('active');
-    
-    // 2. On s'assure qu'aucun style inline de drag ne bloque l'animation CSS
     target.style.transform = ""; 
-    target.style.transition = ""; // On laisse le CSS gérer la transition
-
-    // 3. On attend la fin de l'animation CSS (0.5s) avant de nettoyer
     setTimeout(() => {
         cleanUp(target, body);
         window.scrollTo(0, parseFloat(body.dataset.scrollY || 0));
     }, 500);
 }
 
-// --- DRAG MOBILE ---
+// DRAG MOBILE
 window.addEventListener('touchstart', (e) => {
     if (!activeProjectEl || window.innerWidth > 900) return;
     if (activeProjectEl.scrollTop <= 0) {
         startY = e.touches[0].clientY;
         isDragging = true;
-        activeProjectEl.style.transition = "none"; // Drag instantané sans lag
+        activeProjectEl.style.transition = "none"; 
     }
 }, { passive: true });
 
@@ -284,10 +272,8 @@ window.addEventListener('touchmove', (e) => {
     if (!isDragging || !activeProjectEl) return;
     const currentY = e.touches[0].clientY;
     const diff = currentY - startY;
-
     if (diff > 0 && activeProjectEl.scrollTop <= 0) {
         if (e.cancelable) e.preventDefault();
-        // On bouge la fenêtre
         activeProjectEl.style.transform = `translateY(${diff}px)`;
     }
 }, { passive: false });
@@ -295,18 +281,11 @@ window.addEventListener('touchmove', (e) => {
 window.addEventListener('touchend', (e) => {
     if (!isDragging || !activeProjectEl) return;
     isDragging = false;
-
-    // Analyse de la position actuelle
     const transform = activeProjectEl.style.transform;
     const match = transform.match(/translateY\(([^p]+)px\)/);
     const y = match ? parseFloat(match[1]) : 0;
-
-    // Si on a tiré de plus de 100px
-    if (y > 100) {
-        // ON FERME : On enlève juste la classe, le CSS fera glisser le reste
-        closeMobileProject();
-    } else {
-        // REBOND : On remet à 0
+    if (y > 100) { closeMobileProject(); } 
+    else {
         activeProjectEl.style.transition = "transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)";
         activeProjectEl.style.transform = "";
     }
@@ -318,19 +297,44 @@ function cleanUp(target, body) {
     target.removeAttribute('style');
     const ribbon = target.querySelector('.ribbon-home');
     if(ribbon) ribbon.removeAttribute('style');
-    
-    // Reset styles internes
-    const els = target.querySelectorAll('.project-details, .project-row, .project-title, .description');
-    els.forEach(el => el.removeAttribute('style'));
-
+    const els = target.querySelectorAll('.description-wrapper');
+    els.forEach(el => { el.removeAttribute('style'); });
     const ph = document.getElementById('ph-' + target.id);
     if(ph) ph.remove();
-
     document.querySelectorAll('.project-container').forEach(p => { 
         p.style = ""; p.style.opacity = "1"; p.style.pointerEvents = "auto";
     });
     activeProjectEl = null;
 }
+
+// --- SCROLL INTELLIGENT (TRACKPAD & SOURIS) ---
+window.addEventListener("wheel", (evt) => {
+    // Uniquement sur Desktop
+    if (window.innerWidth <= 900) return; 
+    
+    // Uniquement si un projet est ouvert
+    if (document.body.classList.contains('is-project')) {
+        const activeContainer = document.querySelector('.project-container.active');
+        
+        if (activeContainer) {
+            // Détection : Est-ce un mouvement horizontal (Trackpad) ou vertical (Souris) ?
+            const isHorizontalScroll = Math.abs(evt.deltaX) > Math.abs(evt.deltaY);
+
+            if (isHorizontalScroll) {
+                // CAS 1 : TRACKPAD (Mouvement horizontal natif)
+                // ON NE FAIT RIEN ! On laisse le navigateur scroller naturellement.
+                // C'est ça qui débloque ton scroll "immobilisé".
+                return; 
+            } else {
+                // CAS 2 : SOURIS (Roulette verticale)
+                // Là, on intervient pour transformer le vertical en horizontal.
+                evt.preventDefault();
+                activeContainer.scrollLeft += (evt.deltaY * 3); // Vitesse x3
+            }
+        }
+    }
+}, { passive: false }); // Important pour que le preventDefault fonctionne sur la souris
 </script>
+
 </body>
 </html>

@@ -1,5 +1,5 @@
 /* =========================================
-   1. GLOBAL & FONTS
+   GLOBAL & FONTS
    ========================================= */
 @font-face {
     font-family: "ES Klarheit Grotesk";
@@ -9,9 +9,7 @@
 
 :root {
     --pad: 40px; 
-    --homeGap: 10px; 
     --homeRibbonH: 90px;
-    --projectRibbonH: 500px;
     --transitionCurve: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -20,16 +18,23 @@ html, body {
     color: black;
     font-family: "ES Klarheit Grotesk", sans-serif;
     background-color: white;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Empêche le scroll horizontal global */
+}
+
+/* === MODIFICATION ICI : BLOQUE LE SCROLL VERTICAL DU BODY === */
+body.is-project {
+    overflow: hidden; /* C'est ça qui empêche la page de bouger derrière */
 }
 
 /* =========================================
-   2. HEADER
+   HEADER
    ========================================= */
-header { display: flex; justify-content: space-between; padding: var(--pad); position: fixed; top: 0; width: 100%; box-sizing: border-box; z-index: 2000; pointer-events: none; }
+header { display: flex; justify-content: space-between; padding: var(--pad); position: fixed; top: 0; width: 100%; box-sizing: border-box; z-index: 3000; pointer-events: none; }
 header h1 { margin: 0; font-size: 45px; font-weight: 400; letter-spacing: -1px; pointer-events: auto; }
-footer { display: flex; justify-content: space-between; padding: var(--pad); position: fixed; bottom: 0; width: 100%; box-sizing: border-box; z-index: 100; pointer-events: none; }
-footer a { color: inherit; text-decoration: none; pointer-events: auto; }
+footera { display: flex; justify-content: left; padding: var(--pad); position: fixed; bottom: 0; width: 100%; box-sizing: border-box; z-index: 3000; pointer-events: none; }
+footera a { color: inherit; text-decoration: none; pointer-events: auto; }
+footerb { display: flex; justify-content: right; padding: var(--pad); position: fixed; bottom: 0; width: 100%; box-sizing: border-box; z-index: 3000; pointer-events: none; }
+footerb a { font-size: 10px;color: inherit; text-decoration: none; pointer-events: auto; }
 
 .header-arrow { display: none; } 
 .close-handle { display: none; }
@@ -42,7 +47,7 @@ footer a { color: inherit; text-decoration: none; pointer-events: auto; }
 body.is-project .back-link { opacity: 1; pointer-events: auto; }
 
 /* =========================================
-   3. CONTENU
+   CONTENU (LISTE ACCUEIL)
    ========================================= */
 .home-container {
     padding: 180px var(--pad) 150px var(--pad);
@@ -59,8 +64,8 @@ body.is-project .back-link { opacity: 1; pointer-events: auto; }
     height: var(--homeRibbonH); display: flex; gap: 0; overflow: hidden;
     margin-right: 0; flex-shrink: 0; background-color: white;
     transform-origin: left top; 
-    will-change: height, width, margin, padding;
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: height, width;
+    transition: all 0.8s var(--transitionCurve);
 }
 .ribbon-home img { height: 100%; width: auto; display: block; flex-shrink: 0; }
 .ribbon-home::-webkit-scrollbar { display: none; }
@@ -70,52 +75,114 @@ body.is-project .back-link { opacity: 1; pointer-events: auto; }
     transition: opacity 0.3s ease; display: flex; align-items: center;
 }
 
-.description {
+.description-wrapper {
     opacity: 0; height: 0; overflow: hidden; margin: 0;          
     padding-left: var(--pad); max-width: 600px; line-height: 1.6; transition: opacity 0.2s;
 }
 
 /* =========================================
-   4. DESKTOP (Min 901px) - INCHANGÉ
+   DESKTOP (Min 901px) - PROJET OUVERT
    ========================================= */
 @media (min-width: 901px) {
+    
     body.is-project .project-container:not(.active) { opacity: 0; pointer-events: none; }
 
+    /* 1. LE CADRE PRINCIPAL (La fenêtre de vision) */
     body.is-project .project-container.active {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-        z-index: 1500; background: white;
-        transition: transform 0.8s var(--transitionCurve);
+        position: fixed; 
+        z-index: 1500; 
+        background: white;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important; 
+        height: 100vh !important;
+        
+        /* C'est ici qu'on autorise le débordement */
+        overflow-x: auto; 
+        overflow-y: hidden;
+        
+        overscroll-behavior-x: none;
+        scrollbar-width: none; 
+        -ms-overflow-style: none;
+        pointer-events: auto;
+    }
+    body.is-project .project-container.active::-webkit-scrollbar { display: none; }
+    
+    /* 2. LE CONTENEUR INTERMÉDIAIRE */
+    body.is-project .active .project-details { 
+        
+        padding-left: 0;
+        height: 100%;
+        
+        /* C'EST ICI LA CLÉ : On lui dit "Prends la taille de ton contenu" */
+        width: fit-content; 
+        min-width: 100vw; /* Au minimum l'écran */
+        
+        display: flex;
+        box-sizing: border-box;
     }
     
-    body.is-project .active .project-details { padding-top: 150px; }
-    body.is-project .active .project-row { margin-bottom: 0; height: auto; }
-    body.is-project .active .project-title { opacity: 0; pointer-events: none; }
+    body.is-project .active .project-row { 
+        margin-bottom: 0; 
+        height: auto; 
+        display: flex; 
+        width: max-content; /* Lui aussi s'étend */
+    }
     
+    body.is-project .active .project-title { display: none; }
+    
+    /* 3. LE RUBAN (Lui qui contient les images) */
     body.is-project .active .ribbon-home {
-        height: var(--projectRibbonH); width: 100vw; position: relative;
-        padding-left: var(--pad); box-sizing: border-box; overflow-x: auto !important; 
-        display: flex; margin-right: 0;
+        height: 500px !important; 
+        display: flex; 
+        gap: 0;
+        
+        /* MAGIE : Calculer la largeur réelle totale des images */
+        width: max-content !important; 
+        margin-top: -40px;
+        margin-bottom: 40px;
+        padding-left: var(--pad); 
+        padding-right: 100px; /* Une marge à la fin pour faire joli */
+        box-sizing: border-box;
+    }
+    
+    /* 4. LES IMAGES */
+    body.is-project .active .ribbon-home img {
+        height: 100%;
+        width: auto; /* Largeur naturelle selon le ratio */
+        max-width: none; /* INTERDIT de limiter la largeur */
+        flex-shrink: 0; /* INTERDIT de s'écraser */
+        display: block;
     }
 
-    body.is-project .active .description { 
-        opacity: 1; height: auto; margin-top: 60px; overflow: visible;
+    /* 5. LA DESCRIPTION */
+    body.is-project .active .description-wrapper { 
+        opacity: 1; 
+        height: auto; 
+        margin-top: 0; 
+        overflow: visible; 
+        
+        /* Reste collé à gauche pendant le scroll */
+        position: fixed;
+        padding-top: 670px;
+        
+        display: block;
+        width: 400px; 
+        white-space: normal;
+        padding-left: var(--pad);
+        padding-right: 50px;
     }
 }
 
 /* =========================================
-   5. MOBILE (Max 900px) - FEUILLE MODALE
+   MOBILE (Max 900px) - INCHANGÉ
    ========================================= */
 @media (max-width: 900px) {
-    
     :root { --pad: 20px; }
-
     header h1 { font-size: 30px !important; }
-    header { z-index: 3000; pointer-events: none; touch-action: none; } /* On laisse passer le clic */
+    header { z-index: 3000; pointer-events: none; touch-action: none; }
     
-    /* Flèche indicateur mobile */
-    .header-arrow { 
-        display: block; font-size: 30px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease;
-    }
+    .header-arrow { display: block; font-size: 30px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
     body.is-project .header-arrow { opacity: 1; transform: translateY(0); }
 
     .home-container { padding-top: 70px; }
@@ -126,82 +193,31 @@ body.is-project .back-link { opacity: 1; pointer-events: auto; }
     .ribbon-home { height: 100%; flex: 0 1 auto; width: auto; gap: 0; }
     .ribbon-home img { max-width: unset; }
 
-    /* === LE STYLE DE LA FENÊTRE QUI MONTE/DESCEND === */
-    .project-container {
-        /* Par défaut, c'est un élément de liste relatif */
-        position: relative;
-        transition: opacity 0.3s;
-    }
+    .project-container { position: relative; transition: opacity 0.3s; }
 
-    /* Quand il devient actif, il devient une fenêtre fixe */
     .project-container.active {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        z-index: 2500;
-        background: white;
-        
-        /* C'est ICI le secret de l'animation : */
-        /* On ne met pas transform: translateY(0) ici, car c'est géré par le script/défaut */
-        /* On le prépare à l'animation */
+        position: fixed !important; top: 0 !important; left: 0 !important;
+        width: 100% !important; height: 100% !important;
+        z-index: 2500; background: white;
         animation: slideInFromBottom 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        
-        overflow-y: scroll;
-        overflow-x: hidden;
-        overscroll-behavior-y: none; /* Crucial pour le drag */
-        
-        display: flex; flex-direction: column;
-        padding-top: 70px; 
+        overflow-y: scroll; overflow-x: hidden; overscroll-behavior-y: none;
+        display: flex; flex-direction: column; padding-top: 70px; 
     }
     
-    /* Animation d'entrée */
-    @keyframes slideInFromBottom {
-        from { transform: translateY(100%); }
-        to { transform: translateY(0); }
-    }
+    @keyframes slideInFromBottom { from { transform: translateY(100%); } to { transform: translateY(0); } }
     
-    /* NOTE: Pour la sortie, on enlève la classe .active.
-       Comme l'élément redevient .project-container (position relative), 
-       il disparaît instantanément. 
-       MAIS dans le script, on a ajouté une transition JS sur le transform
-       qui va le faire descendre visuellement avant qu'on nettoie tout. */
-
-    .project-container.active .project-row { height: auto; margin-bottom: 20px; pointer-events: none; }
+    .project-container.active .project-details { padding: 0 0 100px 0; width: 100%; }
+    .project-container.active .project-row { height: auto; margin-bottom: 0; pointer-events: none; width: 100%; }
+    .project-container.active .ribbon-home { flex-direction: column; width: 100%; height: auto; gap: 0; }
+    .project-container.active .ribbon-home img { width: 100%; height: auto; display: block; margin-bottom: 0; }
     .project-container.active .project-title { display: none; }
-    /* DANS LA PARTIE @media (max-width: 900px) */
-
-    /* 1. On enlève le padding sur les côtés du conteneur global */
-    .project-container.active .project-details {
-        padding: 0 0 100px 0; /* Haut 0, Droite 0, Bas 100px, Gauche 0 */
-    }
     
-    /* 2. On s'assure que les images prennent bien 100% de la largeur */
-    .project-container.active .ribbon-home {
-        flex-direction: column; 
-        width: 100%; 
-        height: auto; 
-        gap: 0; /* Optionnel : mets 0 si tu veux que les images se touchent verticalement aussi */
-    }
-    
-    .project-container.active .ribbon-home img {
-        width: 100%; 
-        height: auto; 
-        display: block;
-        margin-bottom: 3px; /* Enlève la marge sous chaque image si tu veux qu'elles se collent */
+    .project-container.active .description-wrapper { 
+        opacity: 1; height: auto; overflow: visible; padding: 40px 20px; margin-top: 0; 
     }
 
-    /* 3. IMPORTANT : On remet des marges JUSTE pour le texte */
-    .project-container.active .description {
-        opacity: 1; 
-        height: auto; 
-        overflow: visible; 
-        padding: 40px 20px; /* 20px de marge sur les côtés pour le texte */
-        margin-top: 0;
-    }
     .close-handle {
-        display: block; width: 60px; height: 4px; background: #343434; border-radius: 4px;
+        display: block; width: 40px; height: 4px; background: #E0E0E0; border-radius: 4px;
         position: absolute; top: 80px; left: 50%; transform: translateX(-50%); z-index: 2600;
         opacity: 0; transition: opacity 0.3s;
     }
