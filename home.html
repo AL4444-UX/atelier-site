@@ -113,12 +113,12 @@
     
     </main>
 
-    <footera>
-        <div><a href="mailto:design@lewertoff.com">contact</a></div>
-    </footera>
-    <footerb>
-        <div>© 2026 Aidan Lewertoff. All rights reserved.</div>
-    </footerb>
+   <footer class="main-footer">
+    <div class="f-left"><a href="mailto:design@lewertoff.com">contact</a></div>
+    <div class="f-right">© 2026 Aidan Lewertoff. All rights reserved.</div>
+</footer>
+
+    
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.remove('is-project');
@@ -334,6 +334,39 @@ window.addEventListener("wheel", (evt) => {
         }
     }
 }, { passive: false }); // Important pour que le preventDefault fonctionne sur la souris
+</script>
+
+<script>
+    document.addEventListener('contextmenu', function(e) {
+        // Si l'élément cliqué est une image (IMG), on bloque le menu
+        if (e.target.nodeName === 'IMG') {
+            e.preventDefault();
+        }
+    });
+    
+    // Optionnel : Empêcher aussi le "glisser-déposer" de l'image (drag & drop)
+    document.addEventListener('dragstart', function(e) {
+        if (e.target.nodeName === 'IMG') {
+            e.preventDefault();
+        }
+    });
+</script>
+<script>
+    document.addEventListener('keydown', function(e) {
+        // Bloquer F12 (Outils de développement)
+        if(e.keyCode == 123) {
+            e.preventDefault();
+            return false;
+        }
+
+        // Bloquer Ctrl+Shift+I (Inspecter), Ctrl+Shift+J (Console), Ctrl+Shift+C (Inspecter élément)
+        // Bloquer Ctrl+U (Afficher la source)
+        if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0)) ||
+            (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
+            e.preventDefault();
+            return false;
+        }
+    });
 </script>
 
 </body>
