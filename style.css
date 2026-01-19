@@ -340,4 +340,12 @@ body.is-project .project-container.active {
 .header-arrow {
     pointer-events: auto !important;
 }
+/* À COPIER À LA FIN DE TON FICHIER STYLE.CSS */
+
+/* Bloque le rebond élastique sur tout le site quand un projet est ouvert */
+body.is-project,
+body.is-project .project-container.active {
+    overscroll-behavior-y: none; /* LE PLUS IMPORTANT */
+    touch-action: pan-y;         /* Autorise le scroll vertical uniquement */
+}
 }
