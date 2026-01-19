@@ -303,4 +303,10 @@ body.is-project .active .description {
         padding-top: 0px !important; 
         height: auto !important;
     }
+    /* AJOUTE CECI À LA FIN DE TON CSS */
+
+/* Bloque le rebond élastique natif sur mobile quand le projet est ouvert */
+body.is-project .project-container.active {
+    overscroll-behavior-y: contain; 
+}
 }
