@@ -178,7 +178,7 @@ body.is-project .back-link { opacity: 1; pointer-events: auto; }
     .close-handle {
         display: block; width: 40px; height: 4px; background: #E0E0E0; border-radius: 4px;
         position: absolute; top: 80px; left: 50%; transform: translateX(-50%); z-index: 2600;
-        opacity: 0; transition: opacity 0.5s;
+        opacity: 0; transition: opacity 3s;
     }
     .project-container.active .close-handle { opacity: 1; }
 }
