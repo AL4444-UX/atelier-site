@@ -6,7 +6,9 @@
     <title>Aidan Lewertoff</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="is-home">
+
+    <a href="#" class="back-link" onclick="toggleProject(null, event)">← Retour</a>
 
     <header>
         <h1>Aidan</h1>
@@ -15,64 +17,266 @@
 
     <main class="home-container">
         
-        <a href="ashtable.html" class="project-row">
-            <div class="ribbon-home">
-                <img src="projects/ashtable/1.jpg">
-                <img src="projects/ashtable/2.jpg">
-                <img src="projects/ashtable/3.jpg">
-            </div>
-            <div class="project-title">Ashtable</div>
-        </a>
 
-        <a href="module.html" class="project-row">
-            <div class="ribbon-home">
-                <img src="projects/module/1.jpg">
-                <img src="projects/module/2.jpg">
-                <img src="projects/module/3.jpg">
-                <img src="projects/module/4.jpg">
-                <img src="projects/module/5.jpg">
-                <img src="projects/module/6.jpg">
-                <img src="projects/module/7.jpg">
+                <div id="ashtable" class="project-container">
+            <div class="project-details">
+                <div class="project-row" onclick="toggleProject('ashtable')">
+                    <div class="ribbon-home">
+                        <img src="projects/ashtable/1.jpg">
+                        <img src="projects/ashtable/2.jpg">
+                        <img src="projects/ashtable/3.jpg">
+                    </div>
+                    <div class="project-title">Ashtable</div>
+                </div>
+                <p class="description">Description du projet Ashtable...</p>
             </div>
-            <div class="project-title">Module</div>
-        </a>
+        </div>
 
-        <a href="hen house.html" class="project-row">
-            <div class="ribbon-home">
-                <img src="projects/hen house/2.jpg">
-                <img src="projects/hen house/1.jpg">
-                <img src="projects/hen house/4.jpg">
-                <img src="projects/hen house/3.jpg">
+      
+
+ <div id="hen-house" class="project-container">
+            <div class="project-details">
+                <div class="project-row" onclick="toggleProject('hen-house')">
+                    <div class="ribbon-home">
+                        <img src="projects/hen-house/2.jpg">
+                        <img src="projects/hen-house/1.jpg">
+                        <img src="projects/hen-house/4.jpg">
+                        <img src="projects/hen-house/3.jpg">
+                    </div>
+                    <div class="project-title">Hen house</div>
+                </div>
+                <p class="description">
+                    Texte du projet HEN HOUSE : matériaux, idée, dimensions, contexte, etc.
+                </p>
             </div>
-            <div class="project-title">Hen house</div>
-        </a>
+        </div>
 
-        <a href="slab.html" class="project-row">
-            <div class="ribbon-home">
-                <img src="projects/slab/1.jpg">
-                <img src="projects/slab/2.jpg">
-                <img src="projects/slab/3.jpg">
-                <img src="projects/slab/4.jpg">
+
+        <div id="module" class="project-container">
+            <div class="project-details">
+                <div class="project-row" onclick="toggleProject('module')">
+                    <div class="ribbon-home">
+                        <img src="projects/module/1.jpg">
+                        <img src="projects/module/2.jpg">
+                        <img src="projects/module/3.jpg">
+                        <img src="projects/module/4.jpg">
+                        <img src="projects/module/5.jpg">
+                        <img src="projects/module/6.jpg">
+                        <img src="projects/module/7.jpg">
+                    </div>
+                    <div class="project-title">Module</div>
+                </div>
+                <p class="description">Description du projet Module...</p>
             </div>
-            <div class="project-title">Slab</div>
-        </a>
+        </div>
 
-          <a href="Coffeelet.html" class="project-row">
-            <div class="ribbon-home">
-                <img src="projects/Coffeelet/3.jpg">
-                <img src="projects/Coffeelet/1.jpg">
-                <img src="projects/Coffeelet/2.jpg">
-                
+                <div id="Coffeelet" class="project-container">
+            <div class="project-details">
+                <div class="project-row" onclick="toggleProject('Coffeelet')">
+                    <div class="ribbon-home">
+                        <img src="projects/Coffeelet/1.jpg">
+                        <img src="projects/Coffeelet/2.jpg">
+                        <img src="projects/Coffeelet/3.jpg">
+                       
+                    </div>
+                    <div class="project-title">Coffeelet</div>
+                </div>
+                <p class="description">Description du projet Module...</p>
             </div>
-            <div class="project-title">Slab</div>
-        </a>
+        </div>
 
+
+                <div id="Slab" class="project-container">
+            <div class="project-details">
+                <div class="project-row" onclick="toggleProject('Slab')">
+                    <div class="ribbon-home">
+                        <img src="projects/slab/1.jpg">
+                        <img src="projects/slab/2.jpg">
+                        <img src="projects/slab/3.jpg">
+                        <img src="projects/slab/4.jpg">
+                       
+                    </div>
+                    <div class="project-title">slab</div>
+                </div>
+                <p class="description">Description du projet Module...</p>
+            </div>
+        </div>
+
+    
     </main>
 
     <footer>
         <div><a href="mailto:design@lewertoff.com">design@lewertoff.com</a></div>
         <div><a href="tel:+41797922522">+41 79 792 25 22</a></div>
     </footer>
+
+
+<script>
+function toggleProject(projectId, event) {
+    if (event) event.preventDefault();
+    
+    const body = document.body;
+    const targetProject = projectId ? document.getElementById(projectId) : document.querySelector('.project-container.active');
+    
+    if (!targetProject) return;
+    
+    const ribbon = targetProject.querySelector('.ribbon-home');
+    const details = targetProject.querySelector('.project-details');
+    const row = targetProject.querySelector('.project-row');
+
+    if (!body.classList.contains('is-project')) {
+        // --- ALLER (Ta version validée) ---
+        const rect = targetProject.getBoundingClientRect();
+        const ribbonRect = ribbon.getBoundingClientRect();
+
+        // SAUVEGARDE
+        body.dataset.scrollY = window.pageYOffset;
+        body.dataset.initialTop = rect.top; 
+        body.dataset.initialLeft = rect.left; 
+        body.dataset.initialWidth = ribbonRect.width;
+        body.dataset.initialHeight = ribbonRect.height;
+
+        // 1. Setup
+        targetProject.style.transition = "none";
+        targetProject.style.position = "fixed";
+        targetProject.style.top = rect.top + "px";
+        targetProject.style.left = rect.left + "px";
+        
+        // On s'assure que le conteneur peut grandir
+        targetProject.style.height = ribbonRect.height + "px"; // Départ petit
+        targetProject.style.overflow = "hidden"; // Propre
+        
+        ribbon.style.width = ribbonRect.width + "px";
+        ribbon.style.height = ribbonRect.height + "px";
+        
+        targetProject.classList.add('active');
+        body.classList.add('is-project');
+
+        window.scrollTo(0, 0);
+
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                // 2. Animation
+                const curve = "all 0.8s cubic-bezier(0.23, 1, 0.32, 1)";
+                targetProject.style.transition = curve;
+                ribbon.style.transition = curve;
+                
+                targetProject.style.top = "10px"; 
+                targetProject.style.left = "0px"; 
+                targetProject.style.height = "100vh"; // <--- Arrivée plein écran
+
+                ribbon.style.width = "100vw";     
+                ribbon.style.height = "500px";    
+                
+                // On libère l'overflow à la fin pour le scroll
+                setTimeout(() => { targetProject.style.overflow = ""; }, 800);
+            }, 20);
+        });
+
+    } else {
+        // --- RETOUR (Le Rideau se Lève) ---
+        const originalY = parseFloat(body.dataset.scrollY);
+        const initialTop = parseFloat(body.dataset.initialTop);
+        const initialLeft = parseFloat(body.dataset.initialLeft);
+        const initialWidth = parseFloat(body.dataset.initialWidth);
+        const initialHeight = parseFloat(body.dataset.initialHeight);
+        
+        // 1. DÉPART
+        targetProject.style.transition = "none";
+        ribbon.style.transition = "none";
+        details.style.transition = "none";
+        row.style.transition = "none";
+        
+        targetProject.style.position = "fixed";
+        targetProject.style.top = "10px";
+        targetProject.style.left = "0px"; 
+        targetProject.style.zIndex = "2000";
+        
+        // IMPORTANT : On fige la hauteur du conteneur à 100vh (état ouvert)
+        // et on cache ce qui dépasse pour que le rétrécissement soit net
+        targetProject.style.height = "100vh"; 
+        targetProject.style.overflow = "hidden"; 
+        
+        ribbon.style.width = "100vw";
+        ribbon.style.height = "500px";
+        ribbon.style.paddingLeft = "40px"; 
+        
+        details.style.paddingTop = "150px"; 
+        row.style.marginBottom = "0px";
+
+        // 2. FOND (On force l'affichage immédiat)
+        const otherProjects = document.querySelectorAll('.project-container:not(.active)');
+        otherProjects.forEach(p => { p.style.opacity = '1'; p.style.pointerEvents = 'none'; });
+
+        // 3. SCROLL
+        window.scrollTo(0, originalY);
+
+        // 4. ANIMATION DE FERMETURE
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                const curve = "all 0.8s cubic-bezier(0.23, 1, 0.32, 1)";
+                targetProject.style.transition = curve;
+                ribbon.style.transition = curve;
+                details.style.transition = curve; 
+                row.style.transition = curve;
+                
+                // A. Position
+                targetProject.style.top = initialTop + "px";
+                targetProject.style.left = initialLeft + "px"; 
+                
+                // B. LE RIDEAU REMONTE : On réduit la hauteur du conteneur blanc
+                // C'est ça qui dévoile les autres projets instantanément
+                targetProject.style.height = initialHeight + "px"; 
+
+                // C. Ruban et Contenu
+                ribbon.style.paddingLeft = "0px"; 
+                ribbon.style.width = initialWidth + "px";
+                ribbon.style.height = initialHeight + "px";
+
+                details.style.paddingTop = "0px";
+                row.style.marginBottom = "-70px"; 
+
+                // Gestion Textes
+                const title = targetProject.querySelector('.project-title');
+                const desc = targetProject.querySelector('.description');
+                if(title) title.style.opacity = '1'; 
+                if(desc) desc.style.opacity = '0';   
+
+            }, 50);
+        });
+
+        // 5. NETTOYAGE
+        setTimeout(() => {
+            body.classList.remove('is-project');
+            targetProject.classList.remove('active');
+            
+            targetProject.style = "";
+            ribbon.style = ""; 
+            details.style = "";
+            row.style = "";
+            
+            const title = targetProject.querySelector('.project-title');
+            const desc = targetProject.querySelector('.description');
+            if(title) title.style = "";
+            if(desc) desc.style = "";
+
+            otherProjects.forEach(p => { p.style = ""; });
+            
+        }, 850);
+    }
+}
+
+// Scroll horizontal
+window.addEventListener("wheel", (evt) => {
+    if (document.body.classList.contains('is-project')) {
+        const activeRibbon = document.querySelector('.project-container.active .ribbon-home');
+        if (activeRibbon) {
+            evt.preventDefault();
+            activeRibbon.scrollLeft += evt.deltaY;
+        }
+    }
+}, { passive: false });
+</script>
 
 </body>
 </html>

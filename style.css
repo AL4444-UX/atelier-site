@@ -6,11 +6,11 @@
 }
 
 :root {
-    --pad: 40px;
-    --homeGap: 26px;
-    --nameSize: 45px;
-    --homeTitleSize: 90px;
+    --pad: 40px; 
+    --homeGap: 10px; 
     --homeRibbonH: 90px;
+    --projectRibbonH: 500px;
+    --transitionCurve: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 body {
@@ -19,253 +19,151 @@ body {
     color: black;
     font-family: "ES Klarheit Grotesk", sans-serif;
     overflow-x: hidden;
+    background-color: white;
 }
 
-/* HEADER : Aidan / Lewertoff */
-header {
-    display: flex;
-    justify-content: space-between;
-    padding: var(--pad);
+/* HEADER & FOOTER */
+header { display: flex; justify-content: space-between; padding: var(--pad); position: fixed; top: 0; width: 100%; box-sizing: border-box; z-index: 2000; pointer-events: none; }
+header h1 { margin: 0; font-size: 45px; font-weight: 400; letter-spacing: -1px; pointer-events: auto; }
+footer { display: flex; justify-content: space-between; padding: var(--pad); position: fixed; bottom: 0; width: 100%; box-sizing: border-box; z-index: 100; pointer-events: none; }
+footer a { color: inherit; text-decoration: none; pointer-events: auto; }
+
+/* BOUTON RETOUR */
+.back-link {
     position: fixed;
-    top: 0;
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 100;
-}
-
-header h1 {
-    margin: 0;
-    font-size: var(--nameSize);
-    font-weight: 400;
-    letter-spacing: -1px;
-}
-
-/* --- FOOTER --- */
-footer {
-    display: flex;
-    justify-content: space-between;
-    padding: var(--pad);
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 15px;
-    z-index: 100;
-}
-
-footer a {
-    color: inherit;
+    top: 105px;
+    left: var(--pad);
+    text-transform: uppercase;
+    font-size: 13px;
     text-decoration: none;
+    color: black;
+    z-index: 2100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
 }
+body.is-project .back-link { opacity: 1; pointer-events: auto; }
 
-footer a:hover {
-    text-decoration: underline;
-}
-
-/* LISTE ACCUEIL */
+/* STRUCTURE ACCUEIL */
 .home-container {
-    padding: 180px 35px 40px 35px;
+    padding: 180px var(--pad) 150px var(--pad);
     display: flex;
     flex-direction: column;
-    gap: var(--homeGap);
+    gap: 0px;
 }
 
-.project-row {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-}
+.project-container { transition: opacity 0.3s ease; margin: 0; padding: 0; }
+body.is-project .project-container:not(.active) { opacity: 0; pointer-events: none; }
 
-/* --- AJUSTEMENT RUBAN HOME --- */
-.ribbon-home {
-    height: var(--homeRibbonH);
-    display: flex;
-    flex-direction: row;
-    gap: 0; /* Gap conservé à 0 */
-    overflow: hidden;
-    margin-right: 20px;
-    flex-shrink: 0;
+/* LE PROJET ACTIF */
+body.is-project .project-container.active {
+    position: fixed; /* Indispensable pour éviter le saut de scroll */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 1500;
+    background: white;
+    /* On utilise transform pour l'animation car c'est géré par la carte graphique (pas de flash) */
+    transition: transform 0.8s var(--transitionCurve);
 }
-
-.ribbon-home img {
-    height: 100%;
-    width: auto; /* Changé de fixe à auto pour le ratio */
-    display: block;
-    object-fit: contain; /* Changé cover en contain pour ne pas rogner tes photos */
-}
-
-.project-title {
-    font-size: var(--homeTitleSize);
-    line-height: 0.8;
-    letter-spacing: -2px;
-}
-
-/* PAGE PROJET */
-.project-content {
+body.is-project .active .project-details {
     padding-top: 150px;
 }
 
-.back-link {
-    display: inline-block;
-    color: #000;
-    text-decoration: none;
-    padding-left: 35px;
-    font-size: 13px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: opacity 0.3s;
-    position: relative; 
-    z-index: 10;
+/* --- LA LIGNE (ACCUEIL) --- */
+.project-row { 
+    display: flex; 
+    align-items: center; 
+    cursor: pointer; 
+    margin-bottom: -70px; 
+    height: var(--homeRibbonH); 
+    transition: margin 0.8s var(--transitionCurve); 
 }
 
-.ribbon-project {
-    height: 500px;
+/* --- ANNULATION POUR LE PROJET ACTIF --- */
+/* Pour que la description ne chevauche pas le grand ruban */
+body.is-project .active .project-row {
+    margin-bottom: 0;
+    height: auto;
+}
+
+.project-details {margin: 0; padding: 0;}
+
+/* --- LE RUBAN (CORRIGÉ POUR L'ANIMATION GAUCHE -> DROITE) --- */
+.ribbon-home {
+    height: var(--homeRibbonH);
     display: flex;
-    overflow-x: auto;
-    padding-left: 35px;
-    gap: 0; /* Gap conservé à 0 */
+    gap: 0;
+    overflow: hidden;
+    margin-right: 0;
+    flex-shrink: 0;
+    background-color: white;
+    
+    /* On fixe l'origine de l'animation en haut à gauche */
+    transform-origin: left top; 
+    will-change: height, width, margin, padding;
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.ribbon-project img {
-    height: 100%;       
-    width: auto;        /* Adaptatif selon la résolution */
-    flex-shrink: 0;     
-    display: block;
+.ribbon-home img { height: 100%; width: auto; display: block; flex-shrink: 0; }
+
+/* ÉTAT PROJET ACTIF */
+body.is-project .active .ribbon-home {
+    height: var(--projectRibbonH);
+    
+    /* 1. LARGEUR TOTALE : Prend toute la largeur de la fenêtre */
+    width: 100vw; 
+    position: relative;
+    
+    /* 3. ALIGNEMENT VISUEL : On repousse les images à l'intérieur de 40px
+       pour qu'elles soient à nouveau pile sous le "A" de Aidan. */
+    padding-left: var(--pad); 
+    
+    /* 4. PROTECTION : Assure que le padding n'augmente pas la largeur au-delà de 100vw */
+    box-sizing: border-box; 
+    
+    overflow-x: auto !important; /* Force l'autorisation du scroll horizontal */
+    display: flex;
+    -webkit-overflow-scrolling: touch; /* Pour la fluidité sur mobile/Safari */
+    margin-right: 0;
 }
 
+.project-title { 
+    font-size: 90px; 
+    line-height: 1; 
+    letter-spacing: -2px; 
+    transition: opacity 0.3s ease; 
+    margin: 0; 
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+body.is-project .active .project-title { opacity: 0; pointer-events: none; }
+
+/* DESCRIPTION */
 .description {
-    margin-top: 30px;
-    padding-left: 65px;
+    opacity: 0;
+    padding-left: var(--pad); 
     max-width: 600px;
-    font-size: 14px;
+    margin-top: 60px; /* Espace sous le grand ruban */
     line-height: 1.6;
+    transition: opacity 0.2s;
 }
+body.is-project .active .description { opacity: 1; }
 
-/* Cache la barre de scroll */
-.ribbon-project {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
+/* Scrollbar invisible */
+.ribbon-home { scrollbar-width: none; -ms-overflow-style: none; }
+.ribbon-home::-webkit-scrollbar { display: none; }
 
-.ribbon-project::-webkit-scrollbar {
-    display: none;
-}
-
-/* Animations */
-@keyframes slideIn {
-    from {
-        transform: translateX(-100vw);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-.project-row {
-    animation: slideIn 0.8s ease-out forwards;
-    transform: translateX(-100vw);
-    opacity: 1;
-}
-
-.project-row:nth-child(1) { animation-delay: 0.4s; }
-.project-row:nth-child(2) { animation-delay: 0.4s; }
-.project-row:nth-child(3) { animation-delay: 0.4s; }
-.project-row:nth-child(4) { animation-delay: 0.4s; }
-.project-row:nth-child(5) { animation-delay: 0.4s; }
-
-/* --- RESPONSIVE MOBILE --- */
+/* MOBILE */
 @media (max-width: 900px) {
-    header {
-        height: auto !important;
-        padding: 10px 18px 10px 18px !important;
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background: white;
-        z-index: 1000;
-    }
-
-    header h1 {
-        font-size: 25px !important;
-        margin: 0 !important;
-    }
-
-    .home-container {
-        padding-top: 110px !important;
+    header h1 { font-size: 25px !important; }
+    .back-link { top: 80px; left: 18px; }
+    body.is-project .active .ribbon-home { 
+        height: auto !important; 
+        margin-left: -18px !important;
         padding-left: 18px !important;
-        padding-right: 18px !important;
-        padding-bottom: 80px !important; 
-    }
-
-    .home-container .project-row {
-        display: flex !important;
-        align-items: center !important;
-        margin-bottom: -10px !important;
-    }
-
-    .home-container .ribbon-home {
-        height: 32px !important;
-        margin-right: 5px !important;
-        display: flex !important;
-    }
-
-    .home-container .ribbon-home img {
-        height: 100% !important;
-        width: auto !important; 
-    }
-
-    .home-container .project-title {
-        font-size: 18px !important;
-        white-space: nowrap !important;
-        letter-spacing: -0.5px !important;
-    }
-
-    .project-content {
-        padding-top: 100px !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        padding-bottom: 100px !important;
-        display: block !important;
-    }
-
-    .project-content .ribbon-project {
-        display: block !important;
-        width: 100% !important;
-        height: auto !important;
-        padding: 0 !important;
-        overflow: visible !important;
-    }
-
-    .project-content .ribbon-project img {
-        display: block !important;
-        width: 100% !important;      
-        height: auto !important;     
-        margin-bottom: 5px !important; 
-        max-width: none !important;
-    }
-
-    .project-content .back-link {
-        padding-left: 18px !important;
-    }
-
-    .project-content .description {
-        padding-left: 18px !important;
-        padding-right: 18px !important;
-    }
-
-    footer {
-        position: fixed !important;
-        bottom: 0 !important;
-        z-index: 2000 !important;
-    }
-
-    html::-webkit-scrollbar, 
-    body::-webkit-scrollbar {
-        display: none !important;
     }
 }
