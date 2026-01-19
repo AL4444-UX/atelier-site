@@ -44,6 +44,21 @@ footer a { color: inherit; text-decoration: none; pointer-events: auto; }
 }
 body.is-project .back-link { opacity: 1; pointer-events: auto; }
 
+/* --- INDICATEUR FLÈCHE (Nouveau) --- */
+.header-arrow {
+    font-size: 30px; 
+    font-weight: 400;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    color: black;
+}
+body.is-project .header-arrow {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* STRUCTURE ACCUEIL */
 .home-container {
     padding: 180px var(--pad) 150px var(--pad);
@@ -57,14 +72,13 @@ body.is-project .project-container:not(.active) { opacity: 0; pointer-events: no
 
 /* LE PROJET ACTIF */
 body.is-project .project-container.active {
-    position: fixed; /* Indispensable pour éviter le saut de scroll */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
     z-index: 1500;
     background: white;
-    /* On utilise transform pour l'animation car c'est géré par la carte graphique (pas de flash) */
     transition: transform 0.8s var(--transitionCurve);
 }
 body.is-project .active .project-details {
@@ -82,7 +96,6 @@ body.is-project .active .project-details {
 }
 
 /* --- ANNULATION POUR LE PROJET ACTIF --- */
-/* Pour que la description ne chevauche pas le grand ruban */
 body.is-project .active .project-row {
     margin-bottom: 0;
     height: auto;
@@ -90,7 +103,7 @@ body.is-project .active .project-row {
 
 .project-details {margin: 0; padding: 0;}
 
-/* --- LE RUBAN (CORRIGÉ POUR L'ANIMATION GAUCHE -> DROITE) --- */
+/* --- LE RUBAN --- */
 .ribbon-home {
     height: var(--homeRibbonH);
     display: flex;
@@ -99,8 +112,6 @@ body.is-project .active .project-row {
     margin-right: 0;
     flex-shrink: 0;
     background-color: white;
-    
-    /* On fixe l'origine de l'animation en haut à gauche */
     transform-origin: left top; 
     will-change: height, width, margin, padding;
     transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
@@ -111,21 +122,13 @@ body.is-project .active .project-row {
 /* ÉTAT PROJET ACTIF */
 body.is-project .active .ribbon-home {
     height: var(--projectRibbonH);
-    
-    /* 1. LARGEUR TOTALE : Prend toute la largeur de la fenêtre */
     width: 100vw; 
     position: relative;
-    
-    /* 3. ALIGNEMENT VISUEL : On repousse les images à l'intérieur de 40px
-       pour qu'elles soient à nouveau pile sous le "A" de Aidan. */
     padding-left: var(--pad); 
-    
-    /* 4. PROTECTION : Assure que le padding n'augmente pas la largeur au-delà de 100vw */
     box-sizing: border-box; 
-    
-    overflow-x: auto !important; /* Force l'autorisation du scroll horizontal */
+    overflow-x: auto !important; 
     display: flex;
-    -webkit-overflow-scrolling: touch; /* Pour la fluidité sur mobile/Safari */
+    -webkit-overflow-scrolling: touch; 
     margin-right: 0;
 }
 
@@ -144,23 +147,20 @@ body.is-project .active .project-title { opacity: 0; pointer-events: none; }
 
 .description {
     opacity: 0;
-    
-    /* LA CORRECTION EST ICI : */
-    height: 0;          /* On force la hauteur à 0 pour qu'il ne prenne pas de place */
-    overflow: hidden;   /* On cache ce qui dépasse (le texte) */
-    margin: 0;          /* On enlève les marges qui pourraient pousser */
-    
+    height: 0;         
+    overflow: hidden;   
+    margin: 0;          
     padding-left: var(--pad); 
     max-width: 600px;
     line-height: 1.6;
     transition: opacity 0.2s;
-    }
+}
 
 
 body.is-project .active .description { 
     opacity: 1; 
-    height: auto;       /* Le texte reprend sa place naturelle */
-    margin-top: 60px;   /* On remet la marge du haut */
+    height: auto;       
+    margin-top: 60px;   
     overflow: visible;
 }
 
@@ -173,20 +173,32 @@ body.is-project .active .description {
     
     :root { --pad: 20px; }
     
-    /* CORRECTION HEADER : On cible h1 pour changer la taille */
     header h1 { 
-        font-size: 30px !important; /* Ajuste cette valeur (15px, 18px...) comme tu veux */
+        font-size: 30px !important; 
         line-height: 1;
     }
 
     header {
         z-index: 3000 !important; 
         background: transparent; 
-        pointer-events: none; /* Laisse passer les clics au travers si besoin */
+        pointer-events: none; 
+        align-items: center; /* Pour centrer la flèche verticalement */
     }
     
     .home-container { padding-top: 70px; }
-    .back-link { top: 80px; left: 18px; z-index: 3100 !important; }
+    
+    /* On cache le lien retour classique */
+    .back-link { display: none !important; }
+
+    /* Animation de la flèche */
+    @keyframes bounceArrow {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(5px); }
+    }
+    
+    body.is-project .header-arrow {
+        animation: bounceArrow 2s infinite;
+    }
 
     /* --- LISTE DES PROJETS --- */
     .project-row {
@@ -289,44 +301,4 @@ body.is-project .active .description {
         padding-top: 0px !important; 
         height: auto !important;
     }
-    /* --- INDICATEUR FLÈCHE (Header) --- */
-.header-arrow {
-    font-size: 30px; /* Même taille que le h1 mobile */
-    font-weight: 400;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    pointer-events: none;
-    color: black;
-}
-
-/* On l'affiche uniquement quand un projet est ouvert */
-body.is-project .header-arrow {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* MOBILE UNIQUEMENT */
-@media (max-width: 900px) {
-    
-    /* Cacher le bouton "Retour" classique sur mobile */
-    .back-link {
-        display: none !important; 
-    }
-
-    /* Ajustement du header pour bien centrer la flèche */
-    header {
-        align-items: center;
-    }
-    
-    /* Animation pour inviter au scroll (optionnel mais sympa) */
-    @keyframes bounceArrow {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(5px); }
-    }
-    
-    body.is-project .header-arrow {
-        animation: bounceArrow 2s infinite;
-    }
-}
 }
