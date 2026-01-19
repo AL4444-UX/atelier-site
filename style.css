@@ -1,5 +1,5 @@
 /* =========================================
-   1. CONFIGURATION GÉNÉRALE
+   1. GLOBAL & FONTS
    ========================================= */
 @font-face {
     font-family: "ES Klarheit Grotesk";
@@ -15,191 +15,100 @@
     --transitionCurve: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* IMPORTANT : Bloque le rebond élastique (rubber banding) sur tout le site
-   Cela permet au script JS de prendre le contrôle du tactile. */
 html, body {
     margin: 0;
     padding: 0;
     color: black;
     font-family: "ES Klarheit Grotesk", sans-serif;
     background-color: white;
-    overscroll-behavior-y: none; /* INDISPENSABLE POUR LE TACTILE */
-    overscroll-behavior: none;
+    overflow-x: hidden;
 }
 
 /* =========================================
    2. HEADER & FOOTER
    ========================================= */
-header { 
-    display: flex; 
-    justify-content: space-between; 
-    padding: var(--pad); 
-    position: fixed; 
-    top: 0; 
-    width: 100%; 
-    box-sizing: border-box; 
-    z-index: 2000; 
-    
-    /* Permet de tirer le header sans que le navigateur ne bloque */
-    touch-action: none; 
-    pointer-events: none; 
-}
-
-header h1 { 
-    margin: 0; 
-    font-size: 45px; 
-    font-weight: 400; 
-    letter-spacing: -1px; 
-    pointer-events: auto; 
-}
-
-/* La flèche (Nouvel ajout) */
-.header-arrow {
-    font-size: 30px; 
-    font-weight: 400;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    pointer-events: auto !important; /* Important pour le tactile */
-    color: black;
-}
-
-body.is-project .header-arrow {
-    opacity: 1;
-    transform: translateY(0);
-}
-
+header { display: flex; justify-content: space-between; padding: var(--pad); position: fixed; top: 0; width: 100%; box-sizing: border-box; z-index: 2000; pointer-events: none; }
+header h1 { margin: 0; font-size: 45px; font-weight: 400; letter-spacing: -1px; pointer-events: auto; }
 footer { display: flex; justify-content: space-between; padding: var(--pad); position: fixed; bottom: 0; width: 100%; box-sizing: border-box; z-index: 100; pointer-events: none; }
 footer a { color: inherit; text-decoration: none; pointer-events: auto; }
 
-/* BOUTON RETOUR (Desktop) */
+/* Flèche mobile (cachée par défaut) */
+.header-arrow { display: none; } 
+/* Poignée de drag mobile (cachée par défaut) */
+.close-handle { display: none; }
+
+/* Bouton Retour (Desktop) */
 .back-link {
-    position: fixed;
-    top: 105px;
-    left: var(--pad);
-    text-transform: uppercase;
-    font-size: 13px;
-    text-decoration: none;
-    color: black;
-    z-index: 2100;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
+    position: fixed; top: 105px; left: var(--pad);
+    text-transform: uppercase; font-size: 13px; text-decoration: none; color: black;
+    z-index: 2100; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
 }
 body.is-project .back-link { opacity: 1; pointer-events: auto; }
 
-
 /* =========================================
-   3. STRUCTURE ACCUEIL
+   3. STRUCTURE ACCUEIL & PROJETS
    ========================================= */
 .home-container {
     padding: 180px var(--pad) 150px var(--pad);
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
+    display: flex; flex-direction: column; gap: 0px;
 }
 
-.project-container { transition: opacity 0.3s ease; margin: 0; padding: 0; }
-body.is-project .project-container:not(.active) { opacity: 0; pointer-events: none; }
-
-/* LA LIGNE (ACCUEIL) */
+/* Ligne projet (Clic) */
 .project-row { 
-    display: flex; 
-    align-items: center; 
-    cursor: pointer; 
-    margin-bottom: 20px; 
-    height: var(--homeRibbonH); 
+    display: flex; align-items: center; cursor: pointer; 
+    margin-bottom: 20px; height: var(--homeRibbonH); 
     transition: margin 0.8s var(--transitionCurve); 
 }
 
-/* ANNULATION POUR LE PROJET ACTIF */
-body.is-project .active .project-row {
-    margin-bottom: 0;
-    height: auto;
-}
-
-.project-details {margin: 0; padding: 0;}
-
-/* LE RUBAN */
+/* Ruban images */
 .ribbon-home {
-    height: var(--homeRibbonH);
-    display: flex;
-    gap: 0;
-    overflow: hidden;
-    margin-right: 0;
-    flex-shrink: 0;
-    background-color: white;
+    height: var(--homeRibbonH); display: flex; gap: 0; overflow: hidden;
+    margin-right: 0; flex-shrink: 0; background-color: white;
     transform-origin: left top; 
     will-change: height, width, margin, padding;
     transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .ribbon-home img { height: 100%; width: auto; display: block; flex-shrink: 0; }
-.ribbon-home { scrollbar-width: none; -ms-overflow-style: none; }
 .ribbon-home::-webkit-scrollbar { display: none; }
 
 .project-title { 
-    font-size: 90px; 
-    line-height: 1; 
-    letter-spacing: -2px; 
-    transition: opacity 0.3s ease; 
-    margin: 0; 
-    padding: 0;
-    display: flex;
-    align-items: center;
+    font-size: 90px; line-height: 1; letter-spacing: -2px; margin: 0; padding: 0;
+    transition: opacity 0.3s ease; display: flex; align-items: center;
 }
-body.is-project .active .project-title { opacity: 0; pointer-events: none; }
 
 .description {
-    opacity: 0;
-    height: 0;         
-    overflow: hidden;   
-    margin: 0;          
-    padding-left: var(--pad); 
-    max-width: 600px;
-    line-height: 1.6;
-    transition: opacity 0.2s;
+    opacity: 0; height: 0; overflow: hidden; margin: 0;          
+    padding-left: var(--pad); max-width: 600px; line-height: 1.6; transition: opacity 0.2s;
 }
 
 /* =========================================
-   4. ÉTAT PROJET ACTIF (DESKTOP PAR DÉFAUT)
+   4. ÉTAT ACTIF : DESKTOP (Min 901px)
    ========================================= */
-body.is-project .project-container.active {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: 1500;
-    background: white;
-    transition: transform 0.8s var(--transitionCurve);
+@media (min-width: 901px) {
+    /* Cache les autres projets */
+    body.is-project .project-container:not(.active) { opacity: 0; pointer-events: none; }
+
+    /* Le projet actif prend le contrôle */
+    body.is-project .project-container.active {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+        z-index: 1500; background: white;
+        transition: transform 0.8s var(--transitionCurve);
+    }
     
-    /* CRUCIAL : Empêche le rebond sur le projet lui-même */
-    overscroll-behavior-y: none;
-    overscroll-behavior: none;
-    touch-action: pan-y; /* On gère le vertical nous-mêmes */
+    body.is-project .active .project-details { padding-top: 150px; }
+    body.is-project .active .project-row { margin-bottom: 0; height: auto; }
+    body.is-project .active .project-title { opacity: 0; pointer-events: none; }
+    
+    body.is-project .active .ribbon-home {
+        height: var(--projectRibbonH); width: 100vw; position: relative;
+        padding-left: var(--pad); box-sizing: border-box; overflow-x: auto !important; 
+        display: flex; margin-right: 0;
+    }
+
+    body.is-project .active .description { 
+        opacity: 1; height: auto; margin-top: 60px; overflow: visible;
+    }
 }
-
-body.is-project .active .project-details { padding-top: 150px; }
-
-body.is-project .active .ribbon-home {
-    height: var(--projectRibbonH);
-    width: 100vw; 
-    position: relative;
-    padding-left: var(--pad); 
-    box-sizing: border-box; 
-    overflow-x: auto !important; 
-    display: flex;
-    -webkit-overflow-scrolling: touch; 
-    margin-right: 0;
-}
-
-body.is-project .active .description { 
-    opacity: 1; 
-    height: auto;       
-    margin-top: 60px;   
-    overflow: visible;
-}
-
 
 /* =========================================
    5. MOBILE & TABLETTE (Max 900px)
@@ -207,123 +116,98 @@ body.is-project .active .description {
 @media (max-width: 900px) {
     
     :root { --pad: 20px; }
-    
-    header h1 { 
-        font-size: 30px !important; 
-        line-height: 1;
-    }
 
-    /* Le header doit laisser passer le drag */
-    header {
-        z-index: 3000 !important; 
-        background: transparent; 
-        align-items: center; 
-        touch-action: none; /* CRUCIAL */
-    }
+    /* --- GLOBAL MOBILE --- */
+    header h1 { font-size: 30px !important; }
+    header { z-index: 3000; pointer-events: none; } /* Header au-dessus de tout mais passif */
     
+    /* La flèche indicateur */
+    .header-arrow { 
+        display: block; font-size: 30px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease;
+    }
+    body.is-project .header-arrow { opacity: 1; transform: translateY(0); }
+
     .home-container { padding-top: 70px; }
     .back-link { display: none !important; }
 
-    /* Animation flèche */
-    @keyframes bounceArrow {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(5px); }
-    }
-    body.is-project .header-arrow {
-        animation: bounceArrow 2s infinite;
+    /* Liste projets Mobile */
+    .project-row { height: 50px; margin-bottom: 15px; width: 100%; }
+    .project-title { font-size: 14px; white-space: nowrap; margin-left: 10px; letter-spacing: 0; flex-shrink: 0; }
+    .ribbon-home { height: 100%; flex: 0 1 auto; width: auto; gap: 0; }
+    .ribbon-home img { max-width: unset; }
+
+
+    /* --- LA MODAL (FEUILLE) MOBILE --- */
+    /* C'est ici qu'on change la logique pour faire une feuille qui monte */
+    
+    .project-container {
+        /* Positionnement initial "normal" dans la liste */
+        position: relative;
+        transition: opacity 0.3s;
     }
 
-    /* LISTE PROJETS */
-    .project-row {
-        height: 50px; 
-        margin-bottom: 15px; 
-        width: 100%;
-        display: flex;
-        justify-content: flex-start; 
-        align-items: center;
-    }
-
-    .ribbon-home {
-        height: 100%;
-        flex: 0 1 auto; 
-        width: auto;
-        min-width: 0;
-        display: flex;
-        gap: 0px; 
-    }
-    .ribbon-home img { height: 100%; width: auto; max-width: unset; }
-
-    .project-title {
-        font-size: 14px; white-space: nowrap; margin-left: 10px; letter-spacing: 0px; flex-shrink: 0;       
-    }
-
-    /* ANIMATIONS OUVERTURE/FERMETURE */
-    @keyframes slideUpMobile {
-        0% { transform: translateY(100%); opacity: 1; }
-        100% { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes slideDownMobile {
-        0% { transform: translateY(0); opacity: 1; }
-        100% { transform: translateY(100%); opacity: 1; }
-    }
-
-    /* ÉTAT ACTIF MOBILE */
-    body.is-project .active {
+    /* Quand un projet devient ACTIF sur mobile */
+    .project-container.active {
+        /* Il devient une feuille fixée par-dessus tout */
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
         width: 100% !important;
         height: 100% !important;
-        z-index: 2000;
+        z-index: 2500; /* Sous le header (3000) mais sur le reste */
         background: white;
         
-        /* On garde le scroll interne mais on bloque le rebond global */
-        overflow-y: scroll !important; 
-        overflow-x: hidden !important; 
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-y: none;
+        /* TRANSITION D'ENTRÉE */
+        /* On triche : on utilise une animation CSS pour l'entrée */
+        animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         
-        animation: slideUpMobile 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        transition: none !important;
-        padding-top: 70px !important; 
+        /* SCROLL ET DRAG */
+        overflow-y: scroll;
+        overflow-x: hidden;
+        overscroll-behavior-y: none; /* Bloque le rebond natif pour le drag JS */
+        
+        /* Mise en page interne */
+        display: flex; flex-direction: column;
+        padding-top: 70px; /* Place sous le header */
+        box-sizing: border-box;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+    }
+
+    /* CONTENU INTERNE MOBILE */
+    .project-container.active .project-details {
+        padding: 0 20px 100px 20px;
     }
     
-    body.is-project .active.closing {
-        animation: slideDownMobile 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-    }
-
-    /* Contenu Colonne */
-    body.is-project .active .ribbon-home { 
-        flex-direction: column !important; 
-        height: auto !important;           
-        width: 100% !important;            
-        margin-left: 0 !important;
-        padding-left: 0 !important;        
-        overflow: visible !important;      
-        gap: 0 !important;                 
-    }
-
-    body.is-project .active .ribbon-home img {
-        width: 100% !important; height: auto !important; display: block; margin-bottom: 5px;      
-    }
-
-    body.is-project .active .project-title { display: none !important; }
-
-    body.is-project .active .description {
-        padding: 40px 20px 100px 20px !important; 
-        margin-top: 0 !important;
-        width: auto !important;
-        max-width: none !important;
-        font-size: 16px; 
-        height: auto !important; 
-        overflow: visible !important;
+    .project-container.active .project-row {
+        height: auto; margin-bottom: 20px; pointer-events: none; /* Désactive clic titre */
     }
     
-    body.is-project .active .project-row {
-        height: auto !important; margin-bottom: 0 !important; display: block !important; 
+    .project-container.active .ribbon-home {
+        flex-direction: column; width: 100%; height: auto; margin-left: 0; padding-left: 0; gap: 5px;
     }
     
-    body.is-project .active .project-details {
-        padding-top: 0px !important; height: auto !important;
+    .project-container.active .ribbon-home img {
+        width: 100%; height: auto; display: block;
     }
+    
+    .project-container.active .project-title { display: none; }
+
+    .project-container.active .description {
+        opacity: 1; height: auto; overflow: visible; padding: 20px 0; margin-top: 0;
+    }
+
+    /* --- POIGNÉE DE DRAG --- */
+    .close-handle {
+        display: block;
+        width: 40px; height: 4px; background: #E0E0E0; border-radius: 4px;
+        position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
+        z-index: 2600;
+        /* Uniquement visible quand actif */
+        opacity: 0; transition: opacity 0.3s;
+    }
+    .project-container.active .close-handle { opacity: 1; }
 }
