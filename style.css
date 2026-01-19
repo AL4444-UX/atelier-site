@@ -80,6 +80,7 @@ body.is-project .project-container.active {
     z-index: 1500;
     background: white;
     transition: transform 0.8s var(--transitionCurve);
+    overscroll-behavior-y: contain;
 }
 body.is-project .active .project-details {
     padding-top: 150px;
@@ -255,6 +256,7 @@ body.is-project .active .description {
         animation: slideUpMobile 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         transition: none !important;
         padding-top: 70px !important; 
+        overscroll-behavior-y: contain;
     }
     
     body.is-project .active.closing {
