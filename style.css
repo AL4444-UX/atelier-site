@@ -76,7 +76,7 @@ body.is-project .active .project-details {
     display: flex; 
     align-items: center; 
     cursor: pointer; 
-    margin-bottom: -70px; 
+    margin-bottom: 20px; 
     height: var(--homeRibbonH); 
     transition: margin 0.8s var(--transitionCurve); 
 }
@@ -142,28 +142,191 @@ body.is-project .active .ribbon-home {
 
 body.is-project .active .project-title { opacity: 0; pointer-events: none; }
 
-/* DESCRIPTION */
 .description {
     opacity: 0;
+    
+    /* LA CORRECTION EST ICI : */
+    height: 0;          /* On force la hauteur à 0 pour qu'il ne prenne pas de place */
+    overflow: hidden;   /* On cache ce qui dépasse (le texte) */
+    margin: 0;          /* On enlève les marges qui pourraient pousser */
+    
     padding-left: var(--pad); 
     max-width: 600px;
-    margin-top: 60px; /* Espace sous le grand ruban */
     line-height: 1.6;
     transition: opacity 0.2s;
+    }
+
+
+body.is-project .active .description { 
+    opacity: 1; 
+    height: auto;       /* Le texte reprend sa place naturelle */
+    margin-top: 60px;   /* On remet la marge du haut */
+    overflow: visible;
 }
-body.is-project .active .description { opacity: 1; }
 
 /* Scrollbar invisible */
 .ribbon-home { scrollbar-width: none; -ms-overflow-style: none; }
 .ribbon-home::-webkit-scrollbar { display: none; }
 
-/* MOBILE */
+/* MOBILE & TABLETTE */
 @media (max-width: 900px) {
-    header h1 { font-size: 25px !important; }
-    .back-link { top: 80px; left: 18px; }
-    body.is-project .active .ribbon-home { 
-        height: auto !important; 
-        margin-left: -18px !important;
-        padding-left: 18px !important;
+    
+    :root { --pad: 20px; }
+    
+    /* CORRECTION HEADER : On cible h1 pour changer la taille */
+    header h1 { 
+        font-size: 30px !important; /* Ajuste cette valeur (15px, 18px...) comme tu veux */
+        line-height: 1;
     }
+
+    header {
+        z-index: 3000 !important; 
+        background: transparent; 
+        pointer-events: none; /* Laisse passer les clics au travers si besoin */
+    }
+    
+    .home-container { padding-top: 70px; }
+    .back-link { top: 80px; left: 18px; z-index: 3100 !important; }
+
+    /* --- LISTE DES PROJETS --- */
+    .project-row {
+        height: 50px; 
+        margin-bottom: 15px; 
+        width: 100%;
+        display: flex;
+        justify-content: flex-start; 
+        align-items: center;
+    }
+
+    .ribbon-home {
+        height: 100%;
+        flex: 0 1 auto; 
+        width: auto;
+        min-width: 0;
+        display: flex;
+        gap: 0px; 
+    }
+
+    .ribbon-home img { height: 100%; width: auto; max-width: unset; }
+
+    .project-title {
+        font-size: 14px;      
+        white-space: nowrap;  
+        margin-left: 10px;   
+        letter-spacing: 0px;
+        flex-shrink: 0;       
+    }
+
+    /* --- ANIMATIONS --- */
+    @keyframes slideUpMobile {
+        0% { transform: translateY(100%); opacity: 1; }
+        100% { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes slideDownMobile {
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(100%); opacity: 1; }
+    }
+
+    /* --- PROJET OUVERT --- */
+    body.is-project .active {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 2000;
+        background: white;
+        overflow-y: scroll !important; 
+        overflow-x: hidden !important; 
+        -webkit-overflow-scrolling: touch;
+        animation: slideUpMobile 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        transition: none !important;
+        padding-top: 70px !important; 
+    }
+    
+    body.is-project .active.closing {
+        animation: slideDownMobile 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+
+    /* Contenu Colonne */
+    body.is-project .active .ribbon-home { 
+        flex-direction: column !important; 
+        height: auto !important;           
+        width: 100% !important;            
+        margin-left: 0 !important;
+        padding-left: 0 !important;        
+        overflow: visible !important;      
+        gap: 0 !important;                 
+    }
+
+    body.is-project .active .ribbon-home img {
+        width: 100% !important;  
+        height: auto !important; 
+        display: block;          
+        margin-bottom: 5px;      
+    }
+
+    body.is-project .active .project-title { display: none !important; }
+
+    body.is-project .active .description {
+        padding: 40px 20px 100px 20px !important; 
+        margin-top: 0 !important;
+        width: auto !important;
+        max-width: none !important;
+        font-size: 16px; 
+        height: auto !important; 
+        overflow: visible !important;
+    }
+    
+    body.is-project .active .project-row {
+        height: auto !important;
+        margin-bottom: 0 !important;
+        display: block !important; 
+    }
+    
+    body.is-project .active .project-details {
+        padding-top: 0px !important; 
+        height: auto !important;
+    }
+    /* --- INDICATEUR FLÈCHE (Header) --- */
+.header-arrow {
+    font-size: 30px; /* Même taille que le h1 mobile */
+    font-weight: 400;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    color: black;
+}
+
+/* On l'affiche uniquement quand un projet est ouvert */
+body.is-project .header-arrow {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* MOBILE UNIQUEMENT */
+@media (max-width: 900px) {
+    
+    /* Cacher le bouton "Retour" classique sur mobile */
+    .back-link {
+        display: none !important; 
+    }
+
+    /* Ajustement du header pour bien centrer la flèche */
+    header {
+        align-items: center;
+    }
+    
+    /* Animation pour inviter au scroll (optionnel mais sympa) */
+    @keyframes bounceArrow {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(5px); }
+    }
+    
+    body.is-project .header-arrow {
+        animation: bounceArrow 2s infinite;
+    }
+}
 }
