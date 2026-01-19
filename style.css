@@ -309,4 +309,18 @@ body.is-project .active .description {
 body.is-project .project-container.active {
     overscroll-behavior-y: contain; 
 }
+
+/* AJOUT CRUCIAL À LA FIN DU CSS */
+
+/* 1. Bloque le refresh/rebond sur tout le site quand un projet est ouvert */
+body.is-project {
+    overscroll-behavior-y: none; /* Bloque le rebond natif */
+    touch-action: pan-y;         /* Dit au navigateur qu'on gère le vertical */
+}
+
+/* 2. S'assure que le projet actif obéit aussi */
+body.is-project .project-container.active {
+    overscroll-behavior-y: none;
+    will-change: transform;      /* Optimise pour la fluidité */
+}
 }
