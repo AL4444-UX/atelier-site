@@ -118,64 +118,67 @@
     </footer>
 
 <script>
-// --- CONFIGURATION ---
 document.addEventListener("DOMContentLoaded", () => {
-    // Reset complet au chargement
+    // Nettoyage au chargement
     document.body.classList.remove('is-project');
     document.querySelectorAll('.project-container').forEach(p => { 
         p.classList.remove('active', 'closing'); 
         p.style = ""; 
     });
-    // Nettoyage des placeholders fantômes
     document.querySelectorAll('.project-placeholder').forEach(el => el.remove());
 });
 
-// VARIABLES GLOBALES
 let startY = 0;
 let isDragging = false;
 let activeProjectEl = null;
 
-// --- FONCTION TOGGLE (OUVERTURE/FERMETURE) ---
+// --- FONCTION PRINCIPALE ---
 function toggleProject(projectId, event) {
     if (event) event.preventDefault();
     
     const body = document.body;
     const isMobile = window.innerWidth <= 900; 
     
-    // Identifier la cible
+    // Si on clique sur le header pour fermer (cas mobile flèche)
+    if (!projectId && isMobile && activeProjectEl) {
+        closeMobileProject();
+        return;
+    }
+
+    // Identification de la cible
     let target = projectId ? document.getElementById(projectId) : document.querySelector('.project-container.active');
     
-    // Si on clique sur le header ou ailleurs sans cible précise, on ignore
-    if (!target && !body.classList.contains('is-project')) return;
-    
-    // Si on veut fermer mais qu'on ne sait pas quoi (cas rare), on prend l'actif
-    if (!target && body.classList.contains('is-project')) {
-        target = document.querySelector('.project-container.active');
+    // Si on est déjà ouvert sur mobile et qu'on appelle la fonction sans ID, c'est pour fermer
+    if (!target && isMobile && activeProjectEl) {
+        closeMobileProject();
+        return;
     }
     
     if (!target) return;
-    
     const ribbon = target.querySelector('.ribbon-home');
 
     // === OUVERTURE ===
     if (!body.classList.contains('is-project')) {
         activeProjectEl = target;
-
-        // Sauvegarde scroll page principale
         body.dataset.scrollY = window.pageYOffset;
 
-        // --- BRANCHE DESKTOP ---
-        if (!isMobile) {
+        // --- MOBILE ---
+        if (isMobile) {
+            target.classList.add('active');
+            body.classList.add('is-project');
+            target.scrollTop = 0;
+            // L'animation se fait via CSS (transform)
+        } 
+        
+        // --- DESKTOP ---
+        else {
+            // Sauvegarde positions
             const rect = target.getBoundingClientRect();
             const ribbonRect = ribbon.getBoundingClientRect();
-            
-            // Sauvegarde pour le retour
-            body.dataset.iTop = rect.top; 
-            body.dataset.iLeft = rect.left; 
-            body.dataset.iW = ribbonRect.width;
-            body.dataset.iH = ribbonRect.height;
+            body.dataset.iTop = rect.top; body.dataset.iLeft = rect.left; 
+            body.dataset.iW = ribbonRect.width; body.dataset.iH = ribbonRect.height;
 
-            // Placeholder (Fantôme)
+            // Placeholder
             const ph = document.createElement('div');
             ph.className = 'project-placeholder';
             ph.id = 'ph-' + target.id;
@@ -183,7 +186,7 @@ function toggleProject(projectId, event) {
             ph.style.width = "100%";
             target.parentNode.insertBefore(ph, target);
 
-            // Fixer le projet
+            // Fixer
             target.style.transition = "none";
             target.style.position = "fixed";
             target.style.top = rect.top + "px";
@@ -194,45 +197,23 @@ function toggleProject(projectId, event) {
             target.classList.add('active');
             body.classList.add('is-project');
 
-            // Animation
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     const curve = "all 0.8s cubic-bezier(0.23, 1, 0.32, 1)";
                     target.style.transition = curve;
                     ribbon.style.transition = curve;
-                    target.style.top = "10px"; 
-                    target.style.left = "0px"; 
-                    target.style.height = "100vh"; 
-                    ribbon.style.width = "100vw";     
-                    ribbon.style.height = "500px";    
+                    target.style.top = "10px"; target.style.left = "0px"; 
+                    target.style.height = "100vh"; ribbon.style.width = "100vw"; ribbon.style.height = "500px";    
                 }, 20);
             });
-        } 
-        
-        // --- BRANCHE MOBILE (MODAL SHEET) ---
-        else {
-            target.classList.add('active');
-            body.classList.add('is-project');
-            
-            // Reset scroll interne
-            target.scrollTop = 0;
-            
-            // L'animation se fait via CSS (transform translateY)
-            // On s'assure juste que le style inline ne gêne pas
-            target.style.transform = ""; 
         }
 
     } else {
         // === FERMETURE ===
         
-        // Mobile Close
         if (isMobile) {
-            target.classList.remove('active'); // Le CSS fait redescendre la feuille
-            
-            setTimeout(() => {
-                cleanUp(target, body);
-            }, 400); // Temps de la transition CSS mobile
-            return; 
+            closeMobileProject();
+            return;
         }
 
         // Desktop Close
@@ -246,8 +227,7 @@ function toggleProject(projectId, event) {
         if(ribbon) ribbon.style.transition = "none";
         
         document.querySelectorAll('.project-container:not(.active)').forEach(p => { 
-            p.style.opacity = '1'; 
-            p.style.pointerEvents = 'none'; 
+            p.style.opacity = '1'; p.style.pointerEvents = 'none'; 
         });
 
         window.scrollTo(0, originalY);
@@ -258,84 +238,79 @@ function toggleProject(projectId, event) {
                 target.style.transition = curve;
                 if(ribbon) ribbon.style.transition = curve;
                 
-                target.style.top = iTop + "px";
-                target.style.left = iLeft + "px"; 
+                target.style.top = iTop + "px"; target.style.left = iLeft + "px"; 
                 target.style.height = iH + "px"; 
-                if(ribbon) {
-                    ribbon.style.width = iW + "px";
-                    ribbon.style.height = iH + "px";
-                    ribbon.style.paddingLeft = "0px";
-                }
+                if(ribbon) { ribbon.style.width = iW + "px"; ribbon.style.height = iH + "px"; ribbon.style.paddingLeft = "0px"; }
                 
-                resetStyles(target);
+                // Nettoyage Desktop
+                setTimeout(() => { cleanUp(target, body); }, 850);
             }, 50);
         });
-
-        setTimeout(() => { cleanUp(target, body); }, 850);
     }
 }
 
-// --- GESTION TACTILE MOBILE (DRAG DOWN) ---
-
-window.addEventListener('touchstart', (e) => {
-    // Actif seulement sur mobile et si un projet est ouvert
-    if (!activeProjectEl || window.innerWidth > 900) return;
+// Fonction dédiée fermeture Mobile pour animation propre
+function closeMobileProject() {
+    if (!activeProjectEl) return;
     
-    // On doit être en haut du scroll interne pour commencer à tirer
+    const target = activeProjectEl;
+    const body = document.body;
+    
+    // 1. On retire la classe active -> Le CSS reprend le relais et fait descendre la fenetre
+    target.classList.remove('active');
+    
+    // 2. On s'assure qu'aucun style inline de drag ne bloque l'animation CSS
+    target.style.transform = ""; 
+    target.style.transition = ""; // On laisse le CSS gérer la transition
+
+    // 3. On attend la fin de l'animation CSS (0.5s) avant de nettoyer
+    setTimeout(() => {
+        cleanUp(target, body);
+        window.scrollTo(0, parseFloat(body.dataset.scrollY || 0));
+    }, 500);
+}
+
+// --- DRAG MOBILE ---
+window.addEventListener('touchstart', (e) => {
+    if (!activeProjectEl || window.innerWidth > 900) return;
     if (activeProjectEl.scrollTop <= 0) {
         startY = e.touches[0].clientY;
         isDragging = true;
-        // On enlève la transition pour que le drag soit instantané (suit le doigt)
-        activeProjectEl.style.transition = "none";
-    } else {
-        isDragging = false;
+        activeProjectEl.style.transition = "none"; // Drag instantané sans lag
     }
 }, { passive: true });
 
 window.addEventListener('touchmove', (e) => {
     if (!isDragging || !activeProjectEl) return;
-
     const currentY = e.touches[0].clientY;
     const diff = currentY - startY;
 
-    // Si on tire vers le bas (diff > 0)
     if (diff > 0 && activeProjectEl.scrollTop <= 0) {
-        // On empêche le refresh natif du navigateur
         if (e.cancelable) e.preventDefault();
-        
-        // On déplace la feuille vers le bas
+        // On bouge la fenêtre
         activeProjectEl.style.transform = `translateY(${diff}px)`;
     }
-}, { passive: false }); // INDISPENSABLE
+}, { passive: false });
 
 window.addEventListener('touchend', (e) => {
     if (!isDragging || !activeProjectEl) return;
     isDragging = false;
 
-    // Analyse de la distance
-    // On ne peut pas utiliser getComputedStyle ici car on a modifié le style inline
-    // On va lire directement le style transform qu'on a mis
-    const transformString = activeProjectEl.style.transform;
-    const match = transformString.match(/translateY\(([^p]+)px\)/);
-    const translateY = match ? parseFloat(match[1]) : 0;
+    // Analyse de la position actuelle
+    const transform = activeProjectEl.style.transform;
+    const match = transform.match(/translateY\(([^p]+)px\)/);
+    const y = match ? parseFloat(match[1]) : 0;
 
-    // On remet la transition pour l'animation de fin
-    activeProjectEl.style.transition = "transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)";
-
-    // Seuil de fermeture : 120px
-    if (translateY > 120) {
-        // On ferme
-        toggleProject(); 
+    // Si on a tiré de plus de 100px
+    if (y > 100) {
+        // ON FERME : On enlève juste la classe, le CSS fera glisser le reste
+        closeMobileProject();
     } else {
-        // Rebond (retour à 0)
-        activeProjectEl.style.transform = ""; // Le CSS reprend la main (translateY(0))
+        // REBOND : On remet à 0
+        activeProjectEl.style.transition = "transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)";
+        activeProjectEl.style.transform = "";
     }
 });
-
-function resetStyles(target) {
-    const els = target.querySelectorAll('.project-details, .project-row, .project-title, .description');
-    els.forEach(el => el.removeAttribute('style'));
-}
 
 function cleanUp(target, body) {
     body.classList.remove('is-project');
@@ -344,26 +319,18 @@ function cleanUp(target, body) {
     const ribbon = target.querySelector('.ribbon-home');
     if(ribbon) ribbon.removeAttribute('style');
     
-    resetStyles(target);
+    // Reset styles internes
+    const els = target.querySelectorAll('.project-details, .project-row, .project-title, .description');
+    els.forEach(el => el.removeAttribute('style'));
+
     const ph = document.getElementById('ph-' + target.id);
     if(ph) ph.remove();
 
     document.querySelectorAll('.project-container').forEach(p => { 
-        p.style = ""; 
-        p.style.opacity = "1"; 
-        p.style.pointerEvents = "auto";
+        p.style = ""; p.style.opacity = "1"; p.style.pointerEvents = "auto";
     });
     activeProjectEl = null;
 }
-
-// Scroll Horizontal Desktop
-window.addEventListener("wheel", (evt) => {
-    if (window.innerWidth <= 900) return; 
-    if (document.body.classList.contains('is-project')) {
-        const ar = document.querySelector('.project-container.active .ribbon-home');
-        if (ar) { evt.preventDefault(); ar.scrollLeft += evt.deltaY; }
-    }
-}, { passive: false });
 </script>
 </body>
 </html>

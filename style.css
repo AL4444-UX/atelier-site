@@ -16,8 +16,7 @@
 }
 
 html, body {
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     color: black;
     font-family: "ES Klarheit Grotesk", sans-serif;
     background-color: white;
@@ -25,19 +24,16 @@ html, body {
 }
 
 /* =========================================
-   2. HEADER & FOOTER
+   2. HEADER
    ========================================= */
 header { display: flex; justify-content: space-between; padding: var(--pad); position: fixed; top: 0; width: 100%; box-sizing: border-box; z-index: 2000; pointer-events: none; }
 header h1 { margin: 0; font-size: 45px; font-weight: 400; letter-spacing: -1px; pointer-events: auto; }
 footer { display: flex; justify-content: space-between; padding: var(--pad); position: fixed; bottom: 0; width: 100%; box-sizing: border-box; z-index: 100; pointer-events: none; }
 footer a { color: inherit; text-decoration: none; pointer-events: auto; }
 
-/* Flèche mobile (cachée par défaut) */
 .header-arrow { display: none; } 
-/* Poignée de drag mobile (cachée par défaut) */
 .close-handle { display: none; }
 
-/* Bouton Retour (Desktop) */
 .back-link {
     position: fixed; top: 105px; left: var(--pad);
     text-transform: uppercase; font-size: 13px; text-decoration: none; color: black;
@@ -46,21 +42,19 @@ footer a { color: inherit; text-decoration: none; pointer-events: auto; }
 body.is-project .back-link { opacity: 1; pointer-events: auto; }
 
 /* =========================================
-   3. STRUCTURE ACCUEIL & PROJETS
+   3. CONTENU
    ========================================= */
 .home-container {
     padding: 180px var(--pad) 150px var(--pad);
     display: flex; flex-direction: column; gap: 0px;
 }
 
-/* Ligne projet (Clic) */
 .project-row { 
     display: flex; align-items: center; cursor: pointer; 
     margin-bottom: 20px; height: var(--homeRibbonH); 
     transition: margin 0.8s var(--transitionCurve); 
 }
 
-/* Ruban images */
 .ribbon-home {
     height: var(--homeRibbonH); display: flex; gap: 0; overflow: hidden;
     margin-right: 0; flex-shrink: 0; background-color: white;
@@ -82,13 +76,11 @@ body.is-project .back-link { opacity: 1; pointer-events: auto; }
 }
 
 /* =========================================
-   4. ÉTAT ACTIF : DESKTOP (Min 901px)
+   4. DESKTOP (Min 901px) - INCHANGÉ
    ========================================= */
 @media (min-width: 901px) {
-    /* Cache les autres projets */
     body.is-project .project-container:not(.active) { opacity: 0; pointer-events: none; }
 
-    /* Le projet actif prend le contrôle */
     body.is-project .project-container.active {
         position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
         z-index: 1500; background: white;
@@ -111,17 +103,16 @@ body.is-project .back-link { opacity: 1; pointer-events: auto; }
 }
 
 /* =========================================
-   5. MOBILE & TABLETTE (Max 900px)
+   5. MOBILE (Max 900px) - FEUILLE MODALE
    ========================================= */
 @media (max-width: 900px) {
     
     :root { --pad: 20px; }
 
-    /* --- GLOBAL MOBILE --- */
     header h1 { font-size: 30px !important; }
-    header { z-index: 3000; pointer-events: none; } /* Header au-dessus de tout mais passif */
+    header { z-index: 3000; pointer-events: none; touch-action: none; } /* On laisse passer le clic */
     
-    /* La flèche indicateur */
+    /* Flèche indicateur mobile */
     .header-arrow { 
         display: block; font-size: 30px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease;
     }
@@ -130,83 +121,63 @@ body.is-project .back-link { opacity: 1; pointer-events: auto; }
     .home-container { padding-top: 70px; }
     .back-link { display: none !important; }
 
-    /* Liste projets Mobile */
     .project-row { height: 50px; margin-bottom: 15px; width: 100%; }
     .project-title { font-size: 14px; white-space: nowrap; margin-left: 10px; letter-spacing: 0; flex-shrink: 0; }
     .ribbon-home { height: 100%; flex: 0 1 auto; width: auto; gap: 0; }
     .ribbon-home img { max-width: unset; }
 
-
-    /* --- LA MODAL (FEUILLE) MOBILE --- */
-    /* C'est ici qu'on change la logique pour faire une feuille qui monte */
-    
+    /* === LE STYLE DE LA FENÊTRE QUI MONTE/DESCEND === */
     .project-container {
-        /* Positionnement initial "normal" dans la liste */
+        /* Par défaut, c'est un élément de liste relatif */
         position: relative;
         transition: opacity 0.3s;
     }
 
-    /* Quand un projet devient ACTIF sur mobile */
+    /* Quand il devient actif, il devient une fenêtre fixe */
     .project-container.active {
-        /* Il devient une feuille fixée par-dessus tout */
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
         width: 100% !important;
         height: 100% !important;
-        z-index: 2500; /* Sous le header (3000) mais sur le reste */
+        z-index: 2500;
         background: white;
         
-        /* TRANSITION D'ENTRÉE */
-        /* On triche : on utilise une animation CSS pour l'entrée */
-        animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        /* C'est ICI le secret de l'animation : */
+        /* On ne met pas transform: translateY(0) ici, car c'est géré par le script/défaut */
+        /* On le prépare à l'animation */
+        animation: slideInFromBottom 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         
-        /* SCROLL ET DRAG */
         overflow-y: scroll;
         overflow-x: hidden;
-        overscroll-behavior-y: none; /* Bloque le rebond natif pour le drag JS */
+        overscroll-behavior-y: none; /* Crucial pour le drag */
         
-        /* Mise en page interne */
         display: flex; flex-direction: column;
-        padding-top: 70px; /* Place sous le header */
-        box-sizing: border-box;
+        padding-top: 70px; 
     }
-
-    @keyframes slideUp {
+    
+    /* Animation d'entrée */
+    @keyframes slideInFromBottom {
         from { transform: translateY(100%); }
         to { transform: translateY(0); }
     }
+    
+    /* NOTE: Pour la sortie, on enlève la classe .active.
+       Comme l'élément redevient .project-container (position relative), 
+       il disparaît instantanément. 
+       MAIS dans le script, on a ajouté une transition JS sur le transform
+       qui va le faire descendre visuellement avant qu'on nettoie tout. */
 
-    /* CONTENU INTERNE MOBILE */
-    .project-container.active .project-details {
-        padding: 0 20px 100px 20px;
-    }
-    
-    .project-container.active .project-row {
-        height: auto; margin-bottom: 20px; pointer-events: none; /* Désactive clic titre */
-    }
-    
-    .project-container.active .ribbon-home {
-        flex-direction: column; width: 100%; height: auto; margin-left: 0; padding-left: 0; gap: 5px;
-    }
-    
-    .project-container.active .ribbon-home img {
-        width: 100%; height: auto; display: block;
-    }
-    
+    .project-container.active .project-details { padding: 0 20px 100px 20px; }
+    .project-container.active .project-row { height: auto; margin-bottom: 20px; pointer-events: none; }
+    .project-container.active .ribbon-home { flex-direction: column; width: 100%; height: auto; gap: 5px; }
+    .project-container.active .ribbon-home img { width: 100%; height: auto; display: block; }
     .project-container.active .project-title { display: none; }
+    .project-container.active .description { opacity: 1; height: auto; overflow: visible; padding: 20px 0; margin-top: 0; }
 
-    .project-container.active .description {
-        opacity: 1; height: auto; overflow: visible; padding: 20px 0; margin-top: 0;
-    }
-
-    /* --- POIGNÉE DE DRAG --- */
     .close-handle {
-        display: block;
-        width: 40px; height: 4px; background: #E0E0E0; border-radius: 4px;
-        position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
-        z-index: 2600;
-        /* Uniquement visible quand actif */
+        display: block; width: 40px; height: 4px; background: #E0E0E0; border-radius: 4px;
+        position: absolute; top: 80px; left: 50%; transform: translateX(-50%); z-index: 2600;
         opacity: 0; transition: opacity 0.3s;
     }
     .project-container.active .close-handle { opacity: 1; }
