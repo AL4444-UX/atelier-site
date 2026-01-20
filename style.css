@@ -1,477 +1,468 @@
 /* =========================================
-   GLOBAL & FONTS
-   ========================================= */
+GLOBAL & FONTS
+========================================= */
 @font-face {
-    font-family: "ES Klarheit Grotesk";
-    src: url("fonts/ESKlarheitGrotesk-Book.otf") format("opentype");
-    font-weight: 400;
+font-family: "ES Klarheit Grotesk";
+src: url("fonts/ESKlarheitGrotesk-Book.otf") format("opentype");
+font-weight: 400;
 }
 
 :root {
-    /* Le padding s'adapte à la largeur de l'écran (entre 20px et 40px) */
-    --pad: clamp(20px, 4vw, 40px); 
-    --homeRibbonH: clamp(60px, 10vh, 90px);
-    --transitionCurve: cubic-bezier(0.23, 1, 0.32, 1);
+/* Le padding s'adapte à la largeur de l'écran (entre 20px et 40px) */
+--pad: clamp(20px, 4vw, 40px);
+--homeRibbonH: clamp(60px, 10vh, 90px);
+--transitionCurve: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 html, body {
-    margin: 0; padding: 0;
-    color: black;
-    font-family: "ES Klarheit Grotesk", sans-serif;
-    background-color: white;
-    overflow-x: hidden;
+margin: 0; padding: 0;
+color: black;
+font-family: "ES Klarheit Grotesk", sans-serif;
+background-color: white;
+overflow-x: hidden;
 }
 
 body.is-project {
-    overflow: hidden;
+overflow: hidden;
 }
 
 /* =========================================
-   HEADER
-   ========================================= */
-header { 
-    display: flex; 
-    justify-content: space-between; 
-    padding: var(--pad); 
-    position: fixed; 
-    top: 0; 
-    width: 100%; 
-    box-sizing: border-box; 
-    z-index: 3000; 
-    pointer-events: none; 
+HEADER
+========================================= */
+header {
+display: flex;
+justify-content: space-between;
+padding: var(--pad);
+position: fixed;
+top: 0;
+width: 100%;
+box-sizing: border-box;
+z-index: 3000;
+pointer-events: none;
 }
 
-header h1 { 
-    margin: 0; 
-    /* Taille fluide pour le titre principal */
-    font-size: clamp(30px, 4vw, 45px); 
-    font-weight: 400; 
-    letter-spacing: -1px; 
-    pointer-events: auto; 
+header h1 {
+margin: 0;
+/* Taille fluide pour le titre principal */
+font-size: clamp(30px, 4vw, 45px);
+font-weight: 400;
+letter-spacing: -1px;
+pointer-events: auto;
 }
 
 /* =========================================
-   FOOTER
-   ========================================= */
+FOOTER
+========================================= */
 .main-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: var(--pad);
-    box-sizing: border-box;
-    z-index: 3000;
-    pointer-events: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline; 
+position: fixed;
+bottom: 0;
+left: 0;
+width: 100%;
+padding: var(--pad);
+box-sizing: border-box;
+z-index: 3000;
+pointer-events: none;
+display: flex;
+justify-content: space-between;
+align-items: baseline;
 }
 
 .main-footer .f-left a {
-    font-size: clamp(16px, 1.5vw, 20px);
-    color: black;
-    text-decoration: none;
-    pointer-events: auto;
-    line-height: 1;
+font-size: clamp(16px, 1.5vw, 20px);
+color: black;
+text-decoration: none;
+pointer-events: auto;
+line-height: 1;
 }
 
 .main-footer .f-right {
-    font-size: clamp(10px, 1vw, 12px);
-    color: black;
-    text-align: right;
-    pointer-events: auto;
-    line-height: 1;
+font-size: clamp(10px, 1vw, 12px);
+color: black;
+text-align: right;
+pointer-events: auto;
+line-height: 1;
 }
 
 .back-link {
-    position: fixed; 
-    /* Se positionne par rapport au titre du header */
-    top: clamp(80px, 12vh, 105px); 
-    left: var(--pad);
-    text-transform: uppercase; 
-    font-size: 11px; 
-    text-decoration: none; 
-    color: black;
-    z-index: 2100; 
-    opacity: 0; 
-    pointer-events: none; 
-    transition: opacity 0.3s ease;
+position: fixed;
+/* Se positionne par rapport au titre du header */
+top: clamp(80px, 12vh, 105px);
+left: var(--pad);
+text-transform: uppercase;
+font-size: 11px;
+text-decoration: none;
+color: black;
+z-index: 2100;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s ease;
 }
 body.is-project .back-link { opacity: 1; pointer-events: auto; }
 
 /* =========================================
-   CONTENU (LISTE ACCUEIL)
-   ========================================= */
+CONTENU (LISTE ACCUEIL)
+========================================= */
 .home-container {
-    /* Espacement haut/bas fluide */
-    padding: 20vh var(--pad) 15vh var(--pad);
-    display: flex; 
-    flex-direction: column; 
-    gap: 0px;
+/* Espacement haut/bas fluide */
+padding: 20vh var(--pad) 15vh var(--pad);
+display: flex;
+flex-direction: column;
+gap: 0px;
 }
 
-.project-row { 
-    display: flex; 
-    align-items: center; 
-    cursor: pointer; 
-    margin-bottom: 20px; 
-    height: var(--homeRibbonH); 
-    transition: margin 0.8s var(--transitionCurve);
-    justify-content: flex-start;
+/* --- NOUVEAU : ANIMATION D'ENTRÉE --- */
+.project-container {
+    opacity: 0;
+    /* Départ : Caché à gauche (hors écran) */
+    transform: translateX(-100vw); 
+    
+    /* Animation : 1.5 secondes pour arriver */
+    transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                opacity 1.5s ease;
+    
+    will-change: transform;
+}
+
+.project-container.reveal {
+    opacity: 1;
+    /* Arrivée : En place */
+    transform: translateX(0);
+}
+
+.project-row {
+display: flex;
+align-items: center;
+cursor: pointer;
+margin-bottom: 20px;
+height: var(--homeRibbonH);
+transition: margin 0.8s var(--transitionCurve);
+justify-content: flex-start;
 }
 
 .ribbon-home {
-    height: var(--homeRibbonH); 
-    display: flex; 
-    gap: 0; 
-    overflow: hidden;
-    margin-right: 0; 
-    flex-shrink: 1; 
-    background-color: white;
-    transform-origin: left top; 
-    will-change: height, width;
-    transition: all 0.8s var(--transitionCurve);
-    min-width: 0;
+height: var(--homeRibbonH);
+display: flex;
+gap: 0;
+overflow: hidden;
+margin-right: 0;
+flex-shrink: 1;
+background-color: white;
+transform-origin: left top;
+will-change: height, width;
+transition: all 0.8s var(--transitionCurve);
+min-width: 0;
 }
 .ribbon-home img { height: 100%; width: auto; display: block; flex-shrink: 0; }
 
-.project-title { 
-    /* CORRECTION : On réduit drastiquement le "8vw" en "3vw" et le max à 50px */
-    font-size: clamp(24px, 3vw, 50px); 
-    
-    line-height: 1; 
-    letter-spacing: -1px; /* Un peu moins serré pour être lisible */
-    margin: 0; 
-    padding: 0;
-    
-   /* ESPACEMENT : C'est ici que tu gères l'écart entre l'image et le titre */
-    margin-left: 20px; 
-    
-    /* On remet l'alignement naturel du texte */
-    text-align: left;
-    
-    transition: opacity 0.3s ease; 
-    display: flex; 
-    align-items: center;
-    
-    /* Sécurité pour ne pas qu'il s'écrase */
-    flex-shrink: 0; 
-    white-space: nowrap;
+.project-title {
+/* CORRECTION : On réduit drastiquement le "8vw" en "3vw" et le max à 50px */
+font-size: clamp(24px, 3vw, 50px);
+line-height: 1;
+letter-spacing: -1px; /* Un peu moins serré pour être lisible */
+margin: 0;
+padding: 0;
+/* ESPACEMENT : C'est ici que tu gères l'écart entre l'image et le titre */
+margin-left: 20px;
+/* On remet l'alignement naturel du texte */
+text-align: left;
+transition: opacity 0.3s ease;
+display: flex;
+align-items: center;
+/* Sécurité pour ne pas qu'il s'écrase */
+flex-shrink: 0;
+white-space: nowrap;
 }
 
 .description-wrapper {
-    opacity: 0; height: 0; overflow: hidden; margin: 0;          
-    padding-left: var(--pad); 
-    max-width: 800px; 
-    line-height: 1.6; 
-    transition: opacity 0.2s;
-    display: none;
+opacity: 0; height: 0; overflow: hidden; margin: 0;
+padding-left: var(--pad);
+max-width: 800px;
+line-height: 1.6;
+transition: opacity 0.2s;
+display: none;
 }
 
 @media (min-width: 901px) {
-    body.is-project .project-container:not(.active) { opacity: 0; pointer-events: none; }
+body.is-project .project-container:not(.active) { opacity: 0; pointer-events: none; }
 
-    body.is-project .project-container.active {
-        position: fixed; 
-        z-index: 1500; 
-        background: white;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important; 
-        height: 100vh !important;
-        overflow-x: auto; 
-        overflow-y: hidden;
-        scrollbar-width: none; 
-        -ms-overflow-style: none;
-        pointer-events: auto;
-        scroll-behavior: auto!important; /* Double sécurité pour la fluidité native */
-        overflow-anchor: none;
-        overscroll-behavior-x: none;
-    }
-    
-    /* Suppression des barres de scroll */
-    body.is-project .project-container.active::-webkit-scrollbar { display: none; }
+body.is-project .project-container.active {
+position: fixed;
+z-index: 1500;
+background: white;
+top: 0 !important;
+left: 0 !important;
+width: 100% !important;
+height: 100vh !important;
+overflow-x: auto;
+overflow-y: hidden;
+scrollbar-width: none;
+-ms-overflow-style: none;
+pointer-events: auto;
+scroll-behavior: auto!important; /* Double sécurité pour la fluidité native */
+overflow-anchor: none;
+overscroll-behavior-x: none;
+}
+/* Suppression des barres de scroll */
+body.is-project .project-container.active::-webkit-scrollbar { display: none; }
 
-    body.is-project .active .project-details { 
-        height: 100%;
-        width: fit-content; 
-        min-width: 100vw; 
-        display: flex;
-        box-sizing: border-box;
-    }
-    
-    body.is-project .active .project-row { 
-        margin-bottom: 0; 
-        height: auto; 
-        display: flex; 
-        width: max-content; 
-    }
-    
-    body.is-project .active .project-title { display: none; }
-    
-    /* 3. LE RUBAN */
-    body.is-project .active .ribbon-home {
-        height: clamp(300px, 55vh, 500px) !important; 
-        display: flex; 
-        gap: 0;
-        width: max-content !important; 
-        margin-top: -40px;
-        margin-bottom: 40px;
-        padding-left: var(--pad); 
-        padding-right: 0px; 
-        box-sizing: border-box;
-    }
-    
-    body.is-project .active .ribbon-home img {
-        height: 100%;
-        width: auto; 
-        display: block;
-    }
+body.is-project .active .project-details {
+height: 100%;
+width: fit-content;
+min-width: 100vw;
+display: flex;
+box-sizing: border-box;
+}
+body.is-project .active .project-row {
+margin-bottom: 0;
+height: auto;
+display: flex;
+width: max-content;
+}
+body.is-project .active .project-title { display: none; }
+/* 3. LE RUBAN */
+body.is-project .active .ribbon-home {
+height: clamp(300px, 55vh, 500px) !important;
+display: flex;
+gap: 0;
+width: max-content !important;
+margin-top: -40px;
+margin-bottom: 40px;
+padding-left: var(--pad);
+padding-right: 0px;
+box-sizing: border-box;
+}
+body.is-project .active .ribbon-home img {
+height: 100%;
+width: auto;
+display: block;
+}
 
-    /* 5. LA DESCRIPTION - RÉAPPARITION ET FIX FINAL */
-body.is-project .active .description-wrapper { 
-    opacity: 1 !important; 
-    display: block !important;
-    position: fixed !important; 
-    z-index: 4000;
-    
-    /* Positionnement */
-    left: 0 !important;
-    box-sizing: border-box !important;
-    padding-left: var(--pad) !important;
-    top: 72vh; 
-    margin: 0 !important;
+/* 5. LA DESCRIPTION - RÉAPPARITION ET FIX FINAL */
+body.is-project .active .description-wrapper {
+opacity: 1 !important;
+display: block !important;
+position: fixed !important;
+z-index: 4000;
+/* Positionnement */
+left: 0 !important;
+box-sizing: border-box !important;
+padding-left: var(--pad) !important;
+top: 72vh;
+margin: 0 !important;
 
-    /* Taille et Visibilité */
-    width: 1400px; 
-    max-width: 80vw;
-    height: auto; /* Important pour que contain: strict ne le cache pas */
-    visibility: visible;
-    
-    /* STABILISATION SANS DISPARITION */
-    /* On utilise layout et style uniquement pour ne pas casser la hauteur */
-    contain: layout style; 
-    
-    /* Force le rendu propre */
-    transform: translate3d(0,0,0) !important;
-    -webkit-transform: translate3d(0,0,0) !important;
-    
-    /* Sécurités habituelles */
-    white-space: normal;
-    pointer-events: auto;
-    will-change: transform, opacity;
+/* Taille et Visibilité */
+width: 1400px;
+max-width: 80vw;
+height: auto; /* Important pour que contain: strict ne le cache pas */
+visibility: visible;
+/* STABILISATION SANS DISPARITION */
+/* On utilise layout et style uniquement pour ne pas casser la hauteur */
+contain: layout style;
+/* Force le rendu propre */
+transform: translate3d(0,0,0) !important;
+-webkit-transform: translate3d(0,0,0) !important;
+/* Sécurités habituelles */
+white-space: normal;
+pointer-events: auto;
+will-change: transform, opacity;
 }
 
 /* --- FIX TRANSITION RETOUR (FINAL) --- */
 
 /* 1. LE TITRE : On ne le cache plus ! */
 .project-container.closing .project-title {
-    display: flex !important;     /* Il est là physiquement */
-    opacity: 1 !important;        /* Il est visible */
-    
-    /* Petite astuce : on le fait apparaître en fondu très vite au début */
-    animation: fadeInTitle 0.3s ease forwards; 
-    
-    /* Il va suivre le mouvement naturellement car on est en flex-start */
-    pointer-events: none;
+display: flex !important; /* Il est là physiquement */
+opacity: 1 !important; /* Il est visible */
+/* Petite astuce : on le fait apparaître en fondu très vite au début */
+animation: fadeInTitle 0.3s ease forwards;
+/* Il va suivre le mouvement naturellement car on est en flex-start */
+pointer-events: none;
 }
 
 /* 2. LA DESCRIPTION : Elle doit disparaître tout de suite pour ne pas gêner */
 .project-container.closing .description-wrapper {
-    display: none !important;
-    opacity: 0 !important;
+display: none !important;
+opacity: 0 !important;
 }
 
 /* 3. LE RUBAN : Transition fluide des marges */
 .project-container.closing .ribbon-home {
-    /* On force la transition sur TOUT (marges, padding, gap) */
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1) !important;
-    
-    /* On vise les valeurs par défaut du site (0) */
-    gap: 0 !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    padding: 0 !important;
-    
-    display: flex !important;
-    min-width: 0 !important;
+/* On force la transition sur TOUT (marges, padding, gap) */
+transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1) !important;
+/* On vise les valeurs par défaut du site (0) */
+gap: 0 !important;
+margin-top: 0 !important;
+margin-bottom: 0 !important;
+padding: 0 !important;
+display: flex !important;
+min-width: 0 !important;
 }
 
 /* 4. LES IMAGES : Elles suivent le mouvement */
 .project-container.closing .ribbon-home img {
-    height: 100% !important;
-    width: auto !important;
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1) !important;
+height: 100% !important;
+width: auto !important;
+transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1) !important;
 }
 
 /* 5. LA LIGNE : On s'assure que le titre colle aux images */
 .project-container.closing .project-row {
-    height: 100% !important;
-    margin: 0 !important; /* Enlève la marge du bas doucement */
-    
-    /* C'EST ÇA QUI GARDE LE TITRE COLLÉ AUX IMAGES PENDANT LA DESCENTE */
-    justify-content: flex-start !important;
-    
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1) !important;
+height: 100% !important;
+margin: 0 !important; /* Enlève la marge du bas doucement */
+/* C'EST ÇA QUI GARDE LE TITRE COLLÉ AUX IMAGES PENDANT LA DESCENTE */
+justify-content: flex-start !important;
+transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1) !important;
 }
 
 /* Animation simple pour le titre */
 @keyframes fadeInTitle {
-    from { opacity: 0; }
-    to { opacity: 1; }
+from { opacity: 0; }
+to { opacity: 1; }
 }
 
 } /* Fin de la media query Desktop */
 
 
-/* ========================================= 
-   MOBILE (Max 900px) - FENÊTRE QUI MONTE 
-   ========================================= */
+/* =========================================
+MOBILE (Max 900px) - FENÊTRE QUI MONTE
+========================================= */
 @media (max-width: 900px) {
-    :root { --pad: 20px; }
-    
-   header { 
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 60px !important; /* Hauteur fixe pour correspondre au padding du projet */
-    background: white !important; /* Fond blanc opaque */
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    padding: 0 var(--pad) !important;
-    box-sizing: border-box !important;
-    z-index: 4000 !important; /* Même niveau que le footer */
-    pointer-events: none; /* Laisse passer le clic sauf sur les titres */
+:root { --pad: 20px; }
+header {
+position: fixed !important;
+top: 0 !important;
+left: 0 !important;
+width: 100% !important;
+height: 60px !important; /* Hauteur fixe pour correspondre au padding du projet */
+background: white !important; /* Fond blanc opaque */
+display: flex !important;
+justify-content: space-between !important;
+align-items: center !important;
+padding: 0 var(--pad) !important;
+box-sizing: border-box !important;
+z-index: 4000 !important; /* Même niveau que le footer */
+pointer-events: none; /* Laisse passer le clic sauf sur les titres */
 }
 
-header h1 { 
-    font-size: 30px !important; 
-    margin: 0 !important;
-    pointer-events: auto; /* Permet de cliquer sur le titre si besoin */
+header h1 {
+font-size: 30px !important;
+margin: 0 !important;
+pointer-events: auto; /* Permet de cliquer sur le titre si besoin */
 }
-    
-    .header-arrow { 
-        display: block; font-size: 30px; opacity: 0; 
-        transform: translateY(-10px); transition: all 0.3s ease; 
-    }
-    body.is-project .header-arrow { opacity: 1; transform: translateY(0); }
-    
-    .home-container { padding-top: 70px; }
-    .back-link { display: none !important; }
-    
-    .project-row { height: 50px; margin-bottom: 15px; width: 100%; }
-    .project-title { 
-        font-size: 14px; white-space: nowrap; margin-left: 10px; 
-        letter-spacing: 0; flex-shrink: 0; 
-    }
-    
-    .ribbon-home { height: 100%; flex: 0 1 auto; width: auto; gap: 0; }
-    .ribbon-home img { max-width: unset; }
-    
-    .project-container { position: relative; transition: opacity 0.3s; }
-
-    /* L'OVERLAY QUI MONTE */
-    .project-container.active {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        z-index: 2500 !important;
-        background: white !important;
-        animation: slideInFromBottom 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        overflow-y: scroll !important;
-        overflow-x: hidden !important;
-        overscroll-behavior-y: none;
-        display: flex !important;
-        flex-direction: column !important;
-        padding-top: 70px !important;
-        transform: none; /* Annule les transforms de sécurité desktop */
-    }
-
-    @keyframes slideInFromBottom {
-        from { transform: translateY(100%); }
-        to { transform: translateY(0); }
-    }
-
-    .project-container.active .project-details { padding: 0 0 100px 0; width: 100%; }
-    
-    .project-container.active .project-row { 
-        height: auto !important; 
-        margin-bottom: 0 !important; 
-        pointer-events: none; 
-        width: 100% !important; 
-        display: block !important; /* Force le retour au flux vertical */
-    }
-
-    /* FORCER LES IMAGES EN COLONNE */
-    .project-container.active .ribbon-home {
-        flex-direction: column !important;
-        width: 100% !important;
-        height: auto !important;
-        display: flex !important;
-        gap: 0 !important;
-        transform: none !important;
-    }
-
-    .project-container.active .ribbon-home img {
-        width: 100% !important;
-        height: auto !important;
-        display: block !important;
-        margin-bottom: 0 !important;
-    }
-
-    .project-container.active .project-title { display: none !important; }
-
-    /* LE TEXTE EN DESSOUS */
-    .project-container.active .description-wrapper { 
-        opacity: 1 !important;
-        display: block !important;
-        height: auto !important;
-        overflow: visible !important;
-        padding: 40px 20px !important;
-        margin-top: 0 !important;
-        
-        /* IMPORTANT : Annule le mode "vissé" du desktop */
-        position: relative !important; 
-        top: auto !important;
-        left: auto !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        transform: none !important;
-        contain: none !important;
-        box-sizing: border-box !important;
-        white-space: normal !important;
-    }
-
-    .close-handle {
-        display: block !important;
-        width: 40px; height: 4px; background: #E0E0E0; border-radius: 4px;
-        position: absolute; top: 80px; left: 50%; 
-        transform: translateX(-50%); z-index: 2600;
-        opacity: 0; transition: opacity 0.3s;
-    }
-    .project-container.active .close-handle { opacity: 1 !important; }
-
-    /* FOOTER MOBILE FIX */
-    .main-footer {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: auto;
-    background: white !important; /* Fond blanc pour masquer les images */
-    padding: 5px var(--pad) 5px var(--pad) !important; /* On augmente le padding bas */
-    box-sizing: border-box;
-    z-index: 4000 !important; /* Doit être au-dessus du projet ouvert */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.header-arrow {
+display: block; font-size: 30px; opacity: 0;
+transform: translateY(-10px); transition: all 0.3s ease;
 }
-    .f-left, .f-right { max-width: 80%; } 
-    .f-right { font-size: 8px !important; }
-    .f-left a { font-size: 15px !important; }
+body.is-project .header-arrow { opacity: 1; transform: translateY(0); }
+.home-container { padding-top: 70px; }
+.back-link { display: none !important; }
+.project-row { height: 50px; margin-bottom: 15px; width: 100%; }
+.project-title {
+font-size: 14px; white-space: nowrap; margin-left: 10px;
+letter-spacing: 0; flex-shrink: 0;
+}
+.ribbon-home { height: 100%; flex: 0 1 auto; width: auto; gap: 0; }
+.ribbon-home img { max-width: unset; }
+.project-container { position: relative; transition: opacity 0.3s; }
+
+/* L'OVERLAY QUI MONTE */
+.project-container.active {
+position: fixed !important;
+top: 0 !important;
+left: 0 !important;
+width: 100% !important;
+height: 100% !important;
+z-index: 2500 !important;
+background: white !important;
+animation: slideInFromBottom 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+overflow-y: scroll !important;
+overflow-x: hidden !important;
+overscroll-behavior-y: none;
+display: flex !important;
+flex-direction: column !important;
+padding-top: 70px !important;
+transform: none; /* Annule les transforms de sécurité desktop */
 }
 
+@keyframes slideInFromBottom {
+from { transform: translateY(100%); }
+to { transform: translateY(0); }
+}
+
+.project-container.active .project-details { padding: 0 0 100px 0; width: 100%; }
+.project-container.active .project-row {
+height: auto !important;
+margin-bottom: 0 !important;
+pointer-events: none;
+width: 100% !important;
+display: block !important; /* Force le retour au flux vertical */
+}
+
+/* FORCER LES IMAGES EN COLONNE */
+.project-container.active .ribbon-home {
+flex-direction: column !important;
+width: 100% !important;
+height: auto !important;
+display: flex !important;
+gap: 0 !important;
+transform: none !important;
+}
+
+.project-container.active .ribbon-home img {
+width: 100% !important;
+height: auto !important;
+display: block !important;
+margin-bottom: 0 !important;
+}
+
+.project-container.active .project-title { display: none !important; }
+
+/* LE TEXTE EN DESSOUS */
+.project-container.active .description-wrapper {
+opacity: 1 !important;
+display: block !important;
+height: auto !important;
+overflow: visible !important;
+padding: 40px 20px !important;
+margin-top: 0 !important;
+/* IMPORTANT : Annule le mode "vissé" du desktop */
+position: relative !important;
+top: auto !important;
+left: auto !important;
+width: 100% !important;
+max-width: 100% !important;
+transform: none !important;
+contain: none !important;
+box-sizing: border-box !important;
+white-space: normal !important;
+}
+
+.close-handle {
+display: block !important;
+width: 40px; height: 4px; background: #E0E0E0; border-radius: 4px;
+position: absolute; top: 80px; left: 50%;
+transform: translateX(-50%); z-index: 2600;
+opacity: 0; transition: opacity 0.3s;
+}
+.project-container.active .close-handle { opacity: 1 !important; }
+
+/* FOOTER MOBILE FIX */
+.main-footer {
+position: fixed !important;
+bottom: 0 !important;
+left: 0 !important;
+width: 100% !important;
+height: auto;
+background: white !important; /* Fond blanc pour masquer les images */
+padding: 5px var(--pad) 5px var(--pad) !important; /* On augmente le padding bas */
+box-sizing: border-box;
+z-index: 4000 !important; /* Doit être au-dessus du projet ouvert */
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.f-left, .f-right { max-width: 80%; }
+.f-right { font-size: 8px !important; }
+.f-left a { font-size: 15px !important; }
+
+}
