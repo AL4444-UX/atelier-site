@@ -387,28 +387,42 @@ activeContainer.scrollLeft = Math.round(activeContainer.scrollLeft + (evt.deltaY
 </script>
 
 <script>
-document.addEventListener('contextmenu', function(e) {
-if (e.target.nodeName === 'IMG') {
-e.preventDefault();
-}
-});
+/* =========================================
+   BOUCLIER GLOBAL (CODE + IMAGES)
+   ========================================= */
+
+// 1. ANTI-CLIC DROIT GLOBAL
+// On le met sur 'document' entier, pas juste les images.
+// C'est ça qui empêche d'accéder au menu "Afficher le code source".
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// 2. ANTI-DRAG (On garde ta protection d'images)
+// Empêche de glisser-déposer les images sur le bureau
 document.addEventListener('dragstart', function(e) {
-if (e.target.nodeName === 'IMG') {
-e.preventDefault();
-}
+    if (e.target.nodeName === 'IMG') {
+        e.preventDefault();
+    }
 });
-</script>
-<script>
+
+// 3. ANTI-RACCOURCIS (Clavier)
+// Bloque F12, Ctrl+U, Ctrl+S, Inspecteur...
 document.addEventListener('keydown', function(e) {
-if(e.keyCode == 123) {
-e.preventDefault();
-return false;
-}
-if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0)) ||
-(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
-e.preventDefault();
-return false;
-}
+    // F12
+    if (e.key === 'F12' || e.keyCode === 123) {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Ctrl+U (Source), Ctrl+S (Save), Ctrl+Shift+I/J/C (Inspecteur)
+    // Fonctionne sur PC (Ctrl) et Mac (Meta/Cmd)
+    if ((e.ctrlKey || e.metaKey) && (
+        e.key === 'u' || e.key === 'U' || // Source
+        e.key === 's' || e.key === 'S' || // Sauvegarder
+        (e.shiftKey && (e.key === 'i' || e.key === 'I' || e.key === 'j' || e.key === 'J' || e.key === 'c' || e.key === 'C')) // Inspecteur
+    )) {
+        e.preventDefault();
+        return false;
+    }
 });
 </script>
 
