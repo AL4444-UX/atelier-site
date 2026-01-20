@@ -148,13 +148,18 @@ document.querySelectorAll('.project-container').forEach(p => {
 p.classList.remove('active', 'closing');
 p.style = "";
 });
-// --- LE NOUVEAU CODE POUR L'ANIMATION ---
+
 window.addEventListener('load', () => {
+    // 1. On révèle le Header et le Footer
+    document.querySelector('header').classList.add('reveal');
+    document.querySelector('.main-footer').classList.add('reveal');
+
+    // 2. On lance la cascade des projets
     const projects = document.querySelectorAll('.project-container');
     projects.forEach((project, index) => {
         setTimeout(() => {
             project.classList.add('reveal');
-        }, 150 * index); // Le décalage entre chaque projet
+        }, 150 * index); 
     });
 });
 document.querySelectorAll('.project-placeholder').forEach(el => el.remove());

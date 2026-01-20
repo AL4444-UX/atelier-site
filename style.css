@@ -237,34 +237,30 @@ width: auto;
 display: block;
 }
 
-/* 5. LA DESCRIPTION - RÉAPPARITION ET FIX FINAL */
+/* REMPLACE TON BLOC ACTUEL PAR CELUI-CI */
 body.is-project .active .description-wrapper {
-opacity: 1 !important;
-display: block !important;
-position: fixed !important;
-z-index: 4000;
-/* Positionnement */
-left: 0 !important;
-box-sizing: border-box !important;
-padding-left: var(--pad) !important;
-top: 72vh;
-margin: 0 !important;
+    opacity: 1 !important;
+    display: block !important;
+    
+    /* C'est ça qui compte : */
+    position: fixed !important;
+    z-index: 5000 !important; /* On monte le z-index pour être sûr */
+    
+    left: 0 !important;
+    top: 72vh !important;
+    padding-left: var(--pad) !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
 
-/* Taille et Visibilité */
-width: 1400px;
-max-width: 80vw;
-height: auto; /* Important pour que contain: strict ne le cache pas */
-visibility: visible;
-/* STABILISATION SANS DISPARITION */
-/* On utilise layout et style uniquement pour ne pas casser la hauteur */
-contain: layout style;
-/* Force le rendu propre */
-transform: translate3d(0,0,0) !important;
--webkit-transform: translate3d(0,0,0) !important;
-/* Sécurités habituelles */
-white-space: normal;
-pointer-events: auto;
-will-change: transform, opacity;
+    width: 1400px;
+    max-width: 80vw;
+    height: auto;
+    visibility: visible;
+    
+    white-space: normal;
+    pointer-events: auto;
+    
+    /* J'ai supprimé 'transform' et 'contain' qui faisaient bugger le fixed */
 }
 
 /* --- FIX TRANSITION RETOUR (FINAL) --- */
@@ -465,4 +461,80 @@ align-items: center;
 .f-right { font-size: 8px !important; }
 .f-left a { font-size: 15px !important; }
 
+}
+/* --- ANIMATION HEADER & FOOTER --- */
+
+/* 1. Le Header part caché vers le HAUT (-100%) */
+header {
+    transform: translateY(-100%);
+    transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+}
+
+/* 2. Le Footer part caché vers le BAS (+100%) */
+.main-footer {
+    transform: translateY(100%);
+    transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+}
+
+/* 3. La classe qui les remet à leur place (0) */
+header.reveal, 
+.main-footer.reveal {
+    transform: translateY(0);
+}
+
+/* =========================================
+   FIX ULTIME MOBILE : A COLLER TOUT A LA FIN
+   (Remplace les derniers blocs "CORRECTIF" si tu en as)
+   ========================================= */
+
+@media (max-width: 900px) {
+
+    /* 1. On définit une animation 3D puissante pour le mobile */
+    @keyframes slideInFromBottomMobile {
+        0% { 
+            transform: translate3d(0, 100%, 0); /* Départ précis : En bas */
+            opacity: 1;
+        }
+        100% { 
+            transform: translate3d(0, 0, 0);    /* Arrivée précise : En place */
+            opacity: 1;
+        }
+    }
+
+    /* 2. ÉTAT FERMÉ : Animation d'entrée (Gauche vers Droite) */
+    /* On s'assure que l'animation d'entrée latérale fonctionne toujours au chargement */
+    .project-container:not(.active) {
+        transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                    opacity 1.5s ease !important;
+    }
+
+    /* 3. ÉTAT OUVERT : Animation d'ouverture (Bas vers Haut) */
+    .project-container.active {
+        /* CRUCIAL : On tue l'animation latérale pour éviter le conflit */
+        transition: none !important;
+
+        /* On force l'animation qui monte (avec le nom défini au-dessus) */
+        animation: slideInFromBottomMobile 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+
+        /* Sécurités visuelles */
+        opacity: 1 !important;
+        z-index: 2500 !important;
+        
+        /* On écrase toute transformation précédente */
+        transform: translate3d(0,0,0); 
+    }
+}
+/* --- FIX FINAL TEXTE FIXE --- */
+/* Sur Desktop uniquement */
+@media (min-width: 901px) {
+    /* Quand le projet est actif, on enlève TOUTE transformation sur les parents */
+    /* Cela permet au position:fixed du texte de s'accrocher à l'écran et non au ruban */
+    body.is-project .project-container.active,
+    body.is-project .active .ribbon-home {
+        transform: none !important;
+        will-change: auto !important;
+        perspective: none !important;
+    }
 }
