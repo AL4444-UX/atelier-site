@@ -158,26 +158,48 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-document.body.classList.remove('is-project');
-document.querySelectorAll('.project-container').forEach(p => {
-p.classList.remove('active', 'closing');
-p.style = "";
-});
+    
+    // Fonction qui force l'affichage quoi qu'il arrive
+    function forceApparition() {
+        console.log("Lancement de l'affichage forcé...");
 
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. On révèle le Header et le Footer
-    document.querySelector('header').classList.add('reveal');
-    document.querySelector('.main-footer').classList.add('reveal');
+        // 1. LE HEADER
+        const header = document.querySelector('header');
+        if (header) {
+            header.classList.add('reveal');
+            header.style.transform = "translateY(0)"; // Force brute
+            header.style.opacity = "1";
+        }
 
-    // 2. On lance la cascade des projets
-    const projects = document.querySelectorAll('.project-container');
-    projects.forEach((project, index) => {
-        setTimeout(() => {
-            project.classList.add('reveal');
-        }, 150 * index); 
-    });
-});
-document.querySelectorAll('.project-placeholder').forEach(el => el.remove());
+        // 2. LE FOOTER
+        const footer = document.querySelector('.main-footer');
+        if (footer) {
+            footer.classList.add('reveal');
+            footer.style.transform = "translateY(0)"; // Force brute
+            footer.style.opacity = "1";
+        }
+
+        // 3. LES PROJETS
+        const projects = document.querySelectorAll('.project-container');
+        projects.forEach((project, index) => {
+            // On garde le petit délai pour le style, mais on assure le coup
+            setTimeout(() => {
+                project.classList.add('reveal');
+                // Lignes de sécurité : on force le style direct dans le HTML
+                project.style.opacity = "1"; 
+                project.style.transform = "translateX(0)"; 
+            }, 100 * index); // Délai un peu plus court (100ms) pour que ça s'affiche vite
+        });
+    }
+
+    // TENTATIVE 1 : Immédiate
+    forceApparition();
+
+    // TENTATIVE 2 : Au cas où (Filet de sécurité)
+    window.addEventListener('load', forceApparition);
+    
+    // TENTATIVE 3 : Ultime recours (après 1 seconde quoi qu'il arrive)
+    setTimeout(forceApparition, 1000);
 });
 
 let startY = 0;
