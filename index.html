@@ -313,9 +313,8 @@ const target = activeProjectEl;
 const body = document.body;
 target.style.transition = "transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)";
 target.classList.remove('active');
-target.style.transform = "";
+target.style.transform = "transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)";
 target.style.transition = curve;
-ribbon.style.transition = curve;
 setTimeout(() => {
 cleanUp(target, body);
 window.scrollTo(0, parseFloat(body.dataset.scrollY || 0));
