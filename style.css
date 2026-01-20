@@ -10,7 +10,7 @@ font-weight: 400;
 :root {
 /* Le padding s'adapte à la largeur de l'écran (entre 20px et 40px) */
 --pad: clamp(20px, 4vw, 40px);
---homeRibbonH: clamp(60px, 10vh, 90px);
+--homeRibbonH: clamp(60px, 10vh, 120px);
 --transitionCurve: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -55,10 +55,10 @@ FOOTER
 ========================================= */
 .main-footer {
 position: fixed;
-bottom: 0;
+bottom: -30px;
 left: 0;
 width: 100%;
-padding: var(--pad);
+padding:var(--pad);
 box-sizing: border-box;
 z-index: 3000;
 pointer-events: none;
@@ -67,6 +67,7 @@ justify-content: space-between;
 align-items: baseline;
 }
 
+.main-footer .f-left {line-height: 1; display: flex;}
 .main-footer .f-left a {
 font-size: clamp(16px, 1.5vw, 20px);
 color: black;
@@ -74,12 +75,12 @@ text-decoration: none;
 pointer-events: auto;
 line-height: 1;
 }
-
 .main-footer .f-right {
 font-size: clamp(10px, 1vw, 12px);
 color: black;
 text-align: right;
 pointer-events: auto;
+display: flex;
 line-height: 1;
 }
 
@@ -237,7 +238,6 @@ width: auto;
 display: block;
 }
 
-/* REMPLACE TON BLOC ACTUEL PAR CELUI-CI */
 body.is-project .active .description-wrapper {
     opacity: 1 !important;
     display: block !important;
@@ -450,12 +450,12 @@ left: 0 !important;
 width: 100% !important;
 height: auto;
 background: white !important; /* Fond blanc pour masquer les images */
-padding: 5px var(--pad) 5px var(--pad) !important; /* On augmente le padding bas */
+padding: 10px var(--pad) 10px var(--pad) !important; /* On augmente le padding bas */
 box-sizing: border-box;
 z-index: 4000 !important; /* Doit être au-dessus du projet ouvert */
 display: flex;
 justify-content: space-between;
-align-items: center;
+align-items: baseline;
 }
 .f-left, .f-right { max-width: 80%; }
 .f-right { font-size: 8px !important; }
