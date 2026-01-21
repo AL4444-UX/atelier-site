@@ -434,12 +434,51 @@ white-space: normal !important;
 }
 
 .close-handle {
-display: block !important;
-width: 40px; height: 4px; background: #E0E0E0; border-radius: 4px;
-position: absolute; top: 80px; left: 50%;
-transform: translateX(-50%); z-index: 2600;
-opacity: 0; transition: opacity 0.3s;
+  display: block !important;
+  /* On garde la zone de 40px de large pour le clic/touch */
+  width: 40px; 
+  height: 20px; /* On augmente un peu la hauteur pour contenir le V */
+  background: transparent; /* On enlève la barre droite grise */
+  cursor: pointer;
+  position: absolute; 
+  top: 80px; 
+  left: 50%;
+  transform: translateX(-50%); 
+  z-index: 2600;
+  opacity: 0; 
+  transition: opacity 0.3s;
 }
+
+/* Bras gauche du V */
+.close-handle::before {
+  content: '';
+  position: absolute;
+  width: 55%; /* Un peu plus que la moitié pour bien se croiser au centre */
+  height: 4px; /* Épaisseur */
+  background: #E0E0E0;
+  border-radius: 4px;
+  left: 0;
+  top: 0;
+  /* Rotation pour incliner vers le bas (15deg c'est léger, 30deg c'est plus pointu) */
+  transform: rotate(15deg); 
+  transform-origin: right center; /* On pivote depuis le centre */
+}
+
+/* Bras droit du V */
+.close-handle::after {
+  content: '';
+  position: absolute;
+  width: 55%;
+  height: 4px;
+  background: #E0E0E0;
+  border-radius: 4px;
+  right: 0;
+  top: 0;
+  /* Rotation inverse */
+  transform: rotate(-15deg); 
+  transform-origin: left center;
+}
+
 .project-container.active .close-handle { opacity: 1 !important; }
 
 /* FOOTER MOBILE FIX */
@@ -527,10 +566,7 @@ header.reveal,
     }
 }
 /* --- FIX FINAL TEXTE FIXE --- */
-/* Sur Desktop uniquement */
 @media (min-width: 901px) {
-    /* Quand le projet est actif, on enlève TOUTE transformation sur les parents */
-    /* Cela permet au position:fixed du texte de s'accrocher à l'écran et non au ruban */
     body.is-project .project-container.active,
     body.is-project .active .ribbon-home {
         transform: none !important;

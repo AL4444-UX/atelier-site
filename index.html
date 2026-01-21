@@ -426,6 +426,26 @@ document.addEventListener('keydown', function(e) {
     }
 });
 </script>
+<script>
+  // On gère le clic sur le V
+  const allCloseButtons = document.querySelectorAll('.close-handle');
+  
+  allCloseButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.stopPropagation(); // Empêche d'ouvrir le projet au moment où on veut le fermer
+      
+      const parentContainer = this.closest('.project-container');
+      if (parentContainer) {
+        // On utilise ta fonction existante pour que tout le nettoyage (scroll, etc) se fasse
+        if (window.innerWidth <= 900) {
+            closeMobileProject(); 
+        } else {
+            toggleProject(parentContainer.id);
+        }
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
