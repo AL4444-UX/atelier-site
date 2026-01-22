@@ -6,17 +6,17 @@
     
     <title>Aidan Lewertoff ⎯ Design</title>
 
-    <meta name="description" content="Portfolio of Aidan Lewertoff. Industrial Design, Architecture & Furniture. Based in Paris & Geneva. | Projets de design, architecture et mobilier. Basé à Paris et Genève.">
+    <meta name="description" content="Portfolio of Aidan Lewertoff. Industrial Design, Interior Design & Furniture. Based in Paris & Geneva. | Projets de design, architecture d'interieur et mobilier. Basé à Paris et Genève.">
 
-    <meta name="keywords" content="Aidan Lewertoff, Design, Architecture, Paris, Geneva, Genève, France, Switzerland, Furniture, Mobilier, Scenography, Interior Design, Scénographie">
+    <meta name="keywords" content="Aidan Lewertoff, Design, Interior Design, Paris, Geneva, Genève, France, Switzerland, Furniture, Mobilier, Scenography, interieur, Scénographie">
     
     <meta name="author" content="Aidan Lewertoff">
 
-    <meta property="og:title" content="Aidan Lewertoff - Designer & Architect">
-    <meta property="og:description" content="Paris / Geneva. Discover my portfolio: Design, Architecture & Furniture.">
+    <meta property="og:title" content="Aidan Lewertoff - Designer">
+    <meta property="og:description" content="Paris / Geneva. Discover my portfolio: Design, Interior & Furniture.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lewertoff.com">
-    <meta property="og:image" content="https://lewertoff.com/projects/ashtable/1.webp">
+    <meta property="og:image" content="https://lewertoff.com/projects/park-bench/1.webp">
 
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="favicon.png">
@@ -177,27 +177,22 @@
 document.addEventListener("DOMContentLoaded", () => {
     // --- ANIMATION D'ENTRÉE ---
     function forceApparition() {
-        const header = document.querySelector('header');
-        if (header) {
-            header.classList.add('reveal');
-            header.style.transform = "translateY(0)";
-            header.style.opacity = "1";
-        }
-        const footer = document.querySelector('.main-footer');
-        if (footer) {
-            footer.classList.add('reveal');
-            footer.style.transform = "translateY(0)";
-            footer.style.opacity = "1";
-        }
-        const projects = document.querySelectorAll('.project-container');
-        projects.forEach((project, index) => {
-            setTimeout(() => {
-                project.classList.add('reveal');
-                project.style.opacity = "1"; 
-                project.style.transform = "translateX(0)"; 
-            }, 100 * index);
-        });
-    }
+    // 1. Reveal Header
+    const header = document.querySelector('header');
+    if (header) header.classList.add('reveal');
+
+    // 2. Reveal Footer
+    const footer = document.querySelector('.main-footer');
+    if (footer) footer.classList.add('reveal');
+
+    // 3. Reveal Projects with a staggered delay
+    const projects = document.querySelectorAll('.project-container');
+    projects.forEach((project, index) => {
+        setTimeout(() => {
+            project.classList.add('reveal');
+        }, 300 + (100 * index));
+    });
+}
     forceApparition();
     window.addEventListener('load', forceApparition);
     setTimeout(forceApparition, 1000);
