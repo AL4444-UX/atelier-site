@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <url>
+    <loc>https://lewertoff.com/</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+
+    <image:image>
+      <image:loc>https://lewertoff.com/projects/bed/3.webp</image:loc>
+      <image:title>Sleeping unit - brutalist felt bed cocoon</image:title>
+    </image:image>
+    
+
+    <image:image>
+      <image:loc>https://lewertoff.com/projects/hen-house/1.webp</image:loc>
+      <image:title>Hen House - Modern Chicken Coop Architecture</image:title>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://lewertoff.com/projects/module/5.webp</image:loc>
+      <image:title>Module - Urban Furniture for Schools</image:title>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://lewertoff.com/projects/Net-table/2.webp</image:loc>
+      <image:title>Net Table - Modular Coffee Table Design</image:title>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://lewertoff.com/projects/park-bench/1.webp</image:loc>
+      <image:title>Park Bench - Public Bench Design Geneva</image:title>
+      <image:caption>Solid oak and galvanized steel public bench designed for Forêt-Genève.</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://lewertoff.com/projects/slab/4.webp</image:loc>
+      <image:title>Slab - Concrete urban Furniture Modular System</image:title>
+    </image:image>
+    
+
+  </url>
+</urlset>
